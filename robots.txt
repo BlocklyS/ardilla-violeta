@@ -1,0 +1,25 @@
+# robots.txt - Ardilla Violeta (https://ardillavioleta.es/)
+# Permetti la scansione completa di tutte le pagine e risorse pubbliche ai motori di ricerca
+
+User-agent: *
+Allow: /
+
+# Motori di ricerca principali
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Percorso Sitemap XML per l'indicizzazione
+Sitemap: https://ardillavioleta.es/sitemap.xml
+

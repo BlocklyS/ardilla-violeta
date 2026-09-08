@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tool, Librerie e Database Geospaziali | Ardilla Violeta</title>
+  <meta name="description" content="Directory curata dei migliori software GIS open source, librerie Python/R, spatial database e piattaforme di analytics territoriale." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="bbceacbe-4230-437c-9322-366bde0f5edf"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#090d16',
+              surface: '#0f172a',
+              card: '#1e293b',
+              violet: '#8b5cf6',
+              violetGlow: '#a855f7',
+              indigo: '#6366f1',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+    }
+    
+    .topo-lines {
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.12), transparent 70%),
+                        radial-gradient(ellipse at 85% 85%, rgba(6, 182, 212, 0.08), transparent 60%);
+    }
+
+    .tool-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-brand-violet selection:text-white flex flex-col justify-between">
+
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute inset-0 bg-grid-pattern opacity-80"></div>
+    <div class="absolute inset-0 topo-lines"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[380px] bg-gradient-to-tr from-brand-violet/15 via-brand-indigo/15 to-brand-cyan/15 blur-[130px] rounded-full"></div>
+    <div class="absolute top-[650px] -left-48 w-[500px] h-[500px] bg-brand-violet/10 blur-[140px] rounded-full"></div>
+    <div class="absolute top-[1200px] -right-48 w-[550px] h-[550px] bg-brand-cyan/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <!-- STICKY TOP STATUS BAR -->
+  <div class="relative z-30 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md px-4 sm:px-8 py-1.5 text-[11px] font-mono text-slate-400 flex justify-between items-center tracking-wider">
+    <div class="flex items-center space-x-3 truncate">
+      <span class="flex items-center text-brand-violet">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-violet animate-ping mr-1.5"></span>
+        GIS_DEV_TOOLBOX // OPEN ECOSYSTEM
+      </span>
+      <span class="hidden md:inline text-slate-700">|</span>
+      <span class="hidden md:inline text-slate-400">PYTHON / R / SQL / C++</span>
+    </div>
+    <div class="flex items-center space-x-3 text-brand-cyan shrink-0">
+      <span class="text-slate-400">TOOL DISPONIBILI:</span>
+      <span id="topLiveCounter" class="font-bold text-white">...</span>
+      <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand-violet"></i>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVBAR -->
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+    <div class="flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-slate-800 p-1 shadow-lg shadow-brand-violet/20 group-hover:scale-105 group-hover:border-brand-violet/50 transition duration-300">
+          <img src="assets/logo.png" alt="Ardilla Violeta GIS Logo" class="w-full h-full object-contain rounded-xl" />
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-violet rounded-full border-2 border-[#090d16] animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-white group-hover:text-brand-violet transition">Ardilla Violeta</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">GIS & Geodata Hub Italiano</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 border border-slate-800 rounded-full p-1.5 backdrop-blur-md shadow-lg">
+        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Home
+        </a>
+        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-white rounded-full bg-slate-800/90 shadow transition">
+          Tool GIS
+        </a>
+        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Open Data
+        </a>
+        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Directory
+        </a>
+        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Formazione
+        </a>
+        <a href="jobs.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Lavoro & Bandi
+        </a>
+      </nav>
+
+      <!-- CTA & Mobile Toggle Button -->
+      <div class="flex items-center gap-2">
+        <a href="#suggest" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-brand-violet text-xs font-medium text-slate-200 hover:text-white transition shadow-sm">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-brand-violet"></i>
+          <span>Segnala Tool</span>
+        </a>
+
+        <!-- Hamburger Button Mobile -->
+        <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition" aria-label="Apri menu">
+          <i data-lucide="menu" id="menuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-3 p-4 rounded-2xl bg-slate-950/95 border border-slate-800 backdrop-blur-xl shadow-2xl flex flex-col gap-2 transition-all">
+      <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="home" class="w-4 h-4"></i> Home
+      </a>
+      <a href="tools.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-violet/20 text-brand-violet border border-brand-violet/40 flex items-center gap-2">
+        <i data-lucide="wrench" class="w-4 h-4"></i> Tool GIS
+      </a>
+      <a href="opendata.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="database" class="w-4 h-4 text-brand-cyan"></i> Open Data
+      </a>
+      <a href="directory.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="users" class="w-4 h-4 text-brand-violet"></i> Directory
+      </a>
+      <a href="learning.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-cyan"></i> Formazione
+      </a>
+      <a href="jobs.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="briefcase" class="w-4 h-4 text-brand-emerald"></i> Lavoro & Bandi
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow">
+
+    <!-- HERO HEADER & REAL-TIME SEARCH -->
+    <div class="text-center max-w-3xl mx-auto space-y-6">
+      
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand-violet/30 bg-brand-violet/10 text-brand-violet text-xs font-mono tracking-wide shadow-md backdrop-blur-md">
+        <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+        <span>Catalogo Open Source & Developer // Ecosystem</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-white">
+        Tool, Librerie e <span class="bg-gradient-to-r from-brand-violet via-purple-400 to-brand-cyan bg-clip-text text-transparent">Database Geospaziali</span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+        Una selezione ragionata dei migliori software, framework Python/R, spatial database e cloud engine per l'analisi territoriale.
+      </p>
+
+      <!-- Real-time Search Input -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <div class="relative group">
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-violet via-brand-indigo to-brand-cyan rounded-2xl blur opacity-30 group-focus-within:opacity-75 transition duration-300"></div>
+          <div class="relative flex items-center bg-slate-900/90 border border-slate-700/80 rounded-xl overflow-hidden backdrop-blur-xl shadow-2xl">
+            <div class="pl-4.5 pr-2 text-slate-400 flex items-center justify-center">
+              <i data-lucide="search" class="w-5 h-5 group-focus-within:text-brand-violet transition"></i>
+            </div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Cerca tool per nome, tag o libreria (es. QGIS, Python, PostGIS, GDAL, R)..." 
+              class="w-full py-3.5 px-3 bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
+              autocomplete="off"
+            />
+            <button 
+              id="clearSearchBtn" 
+              class="hidden mr-3 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" 
+              title="Azzera ricerca"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FILTER CONTROLS (CATEGORY & LICENSE) -->
+    <div class="mt-10 mb-8 space-y-4 max-w-5xl mx-auto">
+      
+      <!-- CATEGORY FILTER BUTTONS (PILLS) -->
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <button 
+          data-filter="all" 
+          class="category-btn active px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 bg-brand-violet text-white font-bold border-brand-violet shadow-lg shadow-brand-violet/25 flex items-center gap-1.5"
+        >
+          <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+          <span>Tutti i Tool</span>
+        </button>
+
+        <button 
+          data-filter="desktop" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="layout" class="w-3.5 h-3.5 text-brand-cyan"></i>
+          <span>Desktop GIS</span>
+        </button>
+
+        <button 
+          data-filter="scripting" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="code-2" class="w-3.5 h-3.5 text-brand-violet"></i>
+          <span>Coding & Scripting</span>
+        </button>
+
+        <button 
+          data-filter="webgis" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-400"></i>
+          <span>WebGIS & Cloud</span>
+        </button>
+
+        <button 
+          data-filter="database" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="database" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Database Spaziali</span>
+        </button>
+
+        <button 
+          data-filter="satellite" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="satellite" class="w-3.5 h-3.5 text-brand-emerald"></i>
+          <span>Satellite & EO</span>
+        </button>
+
+        <button 
+          data-filter="ai" 
+          class="category-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <span>AI & Automazione</span>
+        </button>
+      </div>
+
+      <!-- LICENSE FILTER BUTTONS -->
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+        <span class="text-[11px] font-mono text-slate-400 mr-1 flex items-center gap-1">
+          <i data-lucide="tag" class="w-3 h-3 text-brand-violet"></i>
+          <span>Licenza:</span>
+        </span>
+
+        <button 
+          data-license="all" 
+          class="license-btn active px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-800 text-white border-slate-600 shadow flex items-center gap-1.5"
+        >
+          <span>Tutte le Licenze</span>
+        </button>
+
+        <button 
+          data-license="opensource" 
+          class="license-btn px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-800/80 bg-slate-900/70 text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 hover:bg-emerald-950/20 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Open Source</span>
+        </button>
+
+        <button 
+          data-license="freemium" 
+          class="license-btn px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-800/80 bg-slate-900/70 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 hover:bg-amber-950/20 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span>Freemium</span>
+        </button>
+
+        <button 
+          data-license="opencore" 
+          class="license-btn px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-800/80 bg-slate-900/70 text-slate-300 hover:text-purple-300 hover:border-purple-500/40 hover:bg-purple-950/20 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+          <span>Open Core / Cloud</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ACTIVE STATS & COUNTER BAR -->
+    <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-6 px-1 border-b border-slate-800/60 pb-3">
+      <div class="flex items-center gap-2">
+        <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-brand-violet"></i>
+        <span>Tool indicizzati: <strong id="visibleCount" class="text-white font-bold">...</strong></span>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        Filtro attivo: <span id="activeFilterLabel" class="text-brand-violet font-semibold">Tutti i Tool</span>
+      </div>
+    </div>
+
+    <!-- TOOL CARDS GRID (Generata dinamicamente dal Foglio Google) -->
+    <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+      <div class="col-span-full text-center py-12 text-slate-400 font-mono text-xs flex items-center justify-center gap-2">
+        <svg class="animate-spin h-4 w-4 text-brand-violet" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Caricamento catalogo strumenti...
+      </div>
+    </div>
+
+    <!-- ZERO RESULTS FALLBACK -->
+    <div id="noResults" class="hidden my-16 text-center max-w-md mx-auto p-8 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md">
+      <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
+        <i data-lucide="filter-x" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-bold text-white mb-1">Nessun tool trovato</h3>
+      <p class="text-xs text-slate-400 mb-4">Nessuno strumento corrisponde ai parametri cercati.</p>
+      <button id="resetSearchBtn" class="px-4 py-2 rounded-xl bg-brand-violet text-white font-bold text-xs hover:bg-violet-600 transition">
+        Azzera filtri di ricerca
+      </button>
+    </div>
+
+    <!-- BOTTOM CTA -->
+    <section id="suggest" class="mt-20 lg:mt-28">
+      <div class="relative p-1 rounded-3xl bg-gradient-to-r from-brand-violet/40 via-brand-indigo/30 to-brand-cyan/40 shadow-2xl">
+        <div class="bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-8 sm:p-12 border border-slate-800">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-8 space-y-3 text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-violet/30 bg-brand-violet/10 text-brand-violet text-xs font-mono">
+                <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+                <span>Open Source Contribution</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Sviluppi o usi una libreria geospaziale non presente?
+              </h2>
+              <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
+                L'ecosistema FOSS4G cresce ogni giorno. Segnalaci librerie Python/R, plugin QGIS, motori di query spaziali o frontend WebGIS per inserirli nella directory.
+              </p>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+              <a 
+                href="mailto:pixie4284@gmail.com?subject=Segnalazione%20Tool%20GIS&body=Nome%20del%20Tool:%0ACategoria:%0ALink%20Repository/Sito:%0ABreve%20Descrizione:" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-brand-violet to-purple-600 hover:from-violet-600 hover:to-purple-500 shadow-lg shadow-brand-violet/20 active:scale-[0.98] transition duration-200 text-center"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Segnala un Tool</span>
+              </a>
+              <a 
+                href="opendata.html" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-slate-300 bg-slate-900 border border-slate-700 hover:border-slate-600 hover:text-white transition duration-200 text-center"
+              >
+                <i data-lucide="database" class="w-4 h-4 text-brand-cyan"></i>
+                <span>Esplora Open Data</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-20 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex flex-col items-center md:items-start text-center md:text-left space-y-1">
+          <div class="flex items-center gap-2">
+            <i data-lucide="compass" class="w-4 h-4 text-brand-violet"></i>
+            <span class="font-bold text-slate-200">Ardilla Violeta</span>
+            <span class="text-slate-400 text-xs">— GIS Hub Italiano</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Progetto indipendente per la community geospaziale, cartografica e GIS italiana.
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition" title="GitHub">
+            <i data-lucide="github" class="w-4 h-4"></i>
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#0a66c2] hover:border-slate-700 transition" title="LinkedIn">
+            <i data-lucide="linkedin" class="w-4 h-4"></i>
+          </a>
+          <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-cyan hover:border-slate-700 transition" title="Telegram Community">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-3">
+        <p>&copy; 2026 Ardilla Violeta. Tutti i diritti riservati.</p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="index.html" class="hover:text-white transition">Home</a>
+          <a href="tools.html" class="hover:text-white transition text-brand-violet">Tool GIS</a>
+          <a href="opendata.html" class="hover:text-white transition">Open Data</a>
+          <a href="directory.html" class="hover:text-white transition">Directory</a>
+          <a href="learning.html" class="hover:text-white transition">Formazione</a>
+          <a href="jobs.html" class="hover:text-white transition">Lavoro & Bandi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT: COLLEGAMENTO GOOGLE SHEETS TOOLS (Stesso identico motore di OpenData) -->
+  <script>
+    // Inserisci qui l'URL CSV della scheda Tools
+    const TOOLS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR2XVI2-Dn3AZXojSPw1ymqkrCYkKSgqywMI075iKZGzC1VYhvONXl1v0k3BTOYiT-jKg7p48HzT5_f/pub?gid=0&single=true&output=csv';
+
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.toggle('hidden');
+        if (menuIcon) {
+          menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    const cardsGrid = document.getElementById('cardsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const licenseBtns = document.querySelectorAll('.license-btn');
+    const visibleCountEl = document.getElementById('visibleCount');
+    const topLiveCounterEl = document.getElementById('topLiveCounter');
+    const activeFilterLabel = document.getElementById('activeFilterLabel');
+    const noResults = document.getElementById('noResults');
+    const resetSearchBtn = document.getElementById('resetSearchBtn');
+
+    let allTools = [];
+    let currentCategoryFilter = 'all';
+    let currentLicenseFilter = 'all';
+    let currentSearchTerm = '';
+
+    // Parser CSV universale (Identico a quello di opendata.html)
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+
+      const isTab = lines[0].includes('\t');
+      const headers = isTab 
+        ? lines[0].split('\t').map(h => h.trim().toLowerCase()) 
+        : lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+
+      const result = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].trim();
+        if (!row) continue;
+
+        let values = [];
+        if (isTab) {
+          values = row.split('\t');
+        } else {
+          values = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || row.split(',');
+        }
+
+        const entry = {};
+        headers.forEach((h, index) => {
+          let val = values[index] ? values[index].trim() : '';
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.substring(1, val.length - 1).replace(/""/g, '"');
+          }
+          entry[h] = val;
+        });
+        result.push(entry);
+      }
+      return result;
+    }
+
+    // Configurazione stili e icone per categoria
+    function getCategoryConfig(category, customIcon) {
+      const cat = (category || 'desktop').toLowerCase();
+      
+      if (cat.includes('satellite')) {
+        return {
+          icon: customIcon || 'satellite',
+          badgeBg: 'bg-emerald-950/60 border-emerald-500/30 text-brand-emerald',
+          accentColor: 'text-brand-emerald',
+          borderHover: 'hover:border-emerald-500/60 hover:shadow-emerald-500/10'
+        };
+      }
+      if (cat.includes('scripting') || cat.includes('python')) {
+        return {
+          icon: customIcon || 'code-2',
+          badgeBg: 'bg-purple-950/60 border-purple-500/30 text-brand-violet',
+          accentColor: 'text-brand-violet',
+          borderHover: 'hover:border-brand-violet/60 hover:shadow-brand-violet/10'
+        };
+      }
+      if (cat.includes('database')) {
+        return {
+          icon: customIcon || 'database',
+          badgeBg: 'bg-amber-950/60 border-amber-500/30 text-amber-400',
+          accentColor: 'text-amber-400',
+          borderHover: 'hover:border-amber-500/60 hover:shadow-amber-500/10'
+        };
+      }
+      if (cat.includes('webgis')) {
+        return {
+          icon: customIcon || 'globe',
+          badgeBg: 'bg-teal-950/60 border-teal-500/30 text-teal-400',
+          accentColor: 'text-teal-400',
+          borderHover: 'hover:border-teal-500/60 hover:shadow-teal-500/10'
+        };
+      }
+      if (cat.includes('ai') || cat.includes('automazione') || cat.includes('copilot')) {
+        return {
+          icon: customIcon || 'sparkles',
+          badgeBg: 'bg-indigo-950/60 border-indigo-500/30 text-indigo-400',
+          accentColor: 'text-indigo-400',
+          borderHover: 'hover:border-indigo-500/60 hover:shadow-indigo-500/10'
+        };
+      }
+      return {
+        icon: customIcon || 'layout',
+        badgeBg: 'bg-cyan-950/60 border-cyan-500/30 text-brand-cyan',
+        accentColor: 'text-brand-cyan',
+        borderHover: 'hover:border-brand-cyan/60 hover:shadow-brand-cyan/10'
+      };
+    }
+
+    // Configurazione e normalizzazione licenza
+    function getLicenseConfig(rawLicense) {
+      const raw = (rawLicense || '').trim();
+      const lower = raw.toLowerCase();
+
+      // Fallback a Open Source se vuoto, oppure se esplicitamente open source/foss
+      if (!lower || lower.includes('open source') || lower.includes('foss') || lower.includes('oss') || lower.includes('free software') || lower.includes('open-source') || lower.includes('gpl') || lower.includes('mit') || lower.includes('apache') || lower.includes('bsd')) {
+        return {
+          type: 'opensource',
+          label: 'Open Source',
+          badgeClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+          icon: 'shield-check'
+        };
+      }
+
+      if (lower.includes('freemium') || lower.includes('free tier') || lower.includes('free-tier')) {
+        return {
+          type: 'freemium',
+          label: 'Freemium',
+          badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+          icon: 'sparkles'
+        };
+      }
+
+      if (lower.includes('open core') || lower.includes('open-core') || lower.includes('cloud') || lower.includes('saas') || lower.includes('hybrid')) {
+        return {
+          type: 'opencore',
+          label: (lower.includes('open core') && lower.includes('cloud')) ? 'Open Core / Cloud' : (raw || 'Open Core / Cloud'),
+          badgeClass: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+          icon: 'cloud'
+        };
+      }
+
+      return {
+        type: 'other',
+        label: raw || 'Open Source',
+        badgeClass: 'bg-slate-800 text-slate-300 border-slate-700',
+        icon: 'tag'
+      };
+    }
+
+    // Generazione Markup Card Singola
+    function renderCard(item) {
+      const name = item.name || item.title || item.nome || 'Tool';
+      const category = (item.category || item.categoria || 'desktop').toLowerCase().trim();
+      const description = item.description || item.descrizione || '';
+      const tags = item.tags || '';
+      const url = item.url || item.link || '#';
+      const icon = item.icon || '';
+      const licenseRaw = item.license || item.licenza || '';
+
+      const config = getCategoryConfig(category, icon);
+      const licenseConfig = getLicenseConfig(licenseRaw);
+
+      const tagsList = tags
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0)
+        .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">${t.startsWith('#') ? t : '#' + t}</span>`)
+        .join('');
+
+      return `
+        <div class="tool-card group relative rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 flex flex-col justify-between ${config.borderHover}"
+             data-category="${category}"
+             data-license="${licenseConfig.type}"
+             data-keywords="${(name + ' ' + description + ' ' + tags + ' ' + category + ' ' + licenseConfig.label + ' ' + licenseConfig.type).toLowerCase()}">
+          <div>
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-11 h-11 rounded-xl ${config.badgeBg} border flex items-center justify-center font-extrabold text-sm shadow-inner group-hover:scale-105 transition shrink-0">
+                  <i data-lucide="${config.icon}" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                  <h2 class="text-lg font-bold text-white group-hover:text-brand-violet transition leading-snug truncate">
+                    ${name}
+                  </h2>
+                  <div class="flex items-center flex-wrap gap-1.5 mt-1">
+                    <span class="text-[11px] font-mono uppercase tracking-wider ${config.accentColor}">${category}</span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-medium border ${licenseConfig.badgeClass}">
+                      <i data-lucide="${licenseConfig.icon}" class="w-3 h-3"></i>
+                      <span>${licenseConfig.label}</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700 transition shrink-0" title="Accedi alla risorsa">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-5">
+              ${description}
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              ${tagsList}
+            </div>
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-end text-[11px] font-mono">
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="${config.accentColor} hover:underline inline-flex items-center gap-1 font-semibold">
+                Esplora Risorsa <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Aggiornamento etichetta filtri attivi
+    function updateActiveFilterLabel() {
+      const activeCatBtn = document.querySelector('.category-btn.active');
+      const catText = activeCatBtn && activeCatBtn.querySelector('span') ? activeCatBtn.querySelector('span').innerText : 'Tutti i Tool';
+      
+      const activeLicBtn = document.querySelector('.license-btn.active');
+      const licText = activeLicBtn && activeLicBtn.querySelector('span') ? activeLicBtn.querySelector('span').innerText : 'Tutte le Licenze';
+
+      if (currentLicenseFilter === 'all') {
+        activeFilterLabel.textContent = catText;
+      } else if (currentCategoryFilter === 'all') {
+        activeFilterLabel.textContent = `Tutti i Tool • ${licText}`;
+      } else {
+        activeFilterLabel.textContent = `${catText} • ${licText}`;
+      }
+    }
+
+    // Filtraggio dinamico combinato (Categoria + Licenza + Ricerca)
+    function filterTools() {
+      const cards = document.querySelectorAll('.tool-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const category = (card.getAttribute('data-category') || '').toLowerCase();
+        const license = (card.getAttribute('data-license') || '').toLowerCase();
+        const keywords = card.getAttribute('data-keywords') || '';
+
+        const matchesCategory = (currentCategoryFilter === 'all' || category.includes(currentCategoryFilter));
+        const matchesLicense = (currentLicenseFilter === 'all' || license === currentLicenseFilter);
+        const matchesSearch = currentSearchTerm === '' || keywords.includes(currentSearchTerm);
+
+        if (matchesCategory && matchesLicense && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      visibleCountEl.textContent = visibleCount;
+      if (topLiveCounterEl) topLiveCounterEl.textContent = visibleCount;
+
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    }
+
+    // Scarica i dati dal foglio Google
+    async function loadToolsFromSheet() {
+      try {
+        const response = await fetch(TOOLS_CSV_URL);
+        const csvText = await response.text();
+        allTools = parseCSV(csvText);
+
+        if (allTools.length === 0) {
+          cardsGrid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-10 font-mono text-xs">Nessun dato trovato nella scheda Tools.</p>`;
+          return;
+        }
+
+        cardsGrid.innerHTML = allTools.map(item => renderCard(item)).join('');
+        lucide.createIcons();
+        filterTools();
+
+      } catch (error) {
+        console.error('Errore durante il caricamento da Google Sheets:', error);
+        cardsGrid.innerHTML = `
+          <div class="col-span-full text-center py-10 text-red-400 text-xs font-mono">
+            Errore nel caricamento dei dati da Google Sheets. Verifica il link CSV della scheda Tools.
+          </div>
+        `;
+      }
+    }
+
+    // Event listener pulsanti categoria
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => {
+          b.classList.remove('active', 'bg-brand-violet', 'text-white', 'font-bold', 'border-brand-violet', 'shadow-lg', 'shadow-brand-violet/25');
+          b.classList.add('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+        });
+
+        btn.classList.add('active', 'bg-brand-violet', 'text-white', 'font-bold', 'border-brand-violet', 'shadow-lg', 'shadow-brand-violet/25');
+        btn.classList.remove('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+
+        currentCategoryFilter = btn.getAttribute('data-filter');
+        updateActiveFilterLabel();
+        filterTools();
+      });
+    });
+
+    // Event listener pulsanti licenza
+    licenseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        licenseBtns.forEach(b => {
+          b.classList.remove(
+            'active',
+            'bg-slate-800', 'border-slate-600', 'text-white', 'shadow',
+            'bg-emerald-500/20', 'border-emerald-500/50', 'text-emerald-300',
+            'bg-amber-500/20', 'border-amber-500/50', 'text-amber-300',
+            'bg-purple-500/20', 'border-purple-500/50', 'text-purple-300'
+          );
+          b.classList.add('border-slate-800/80', 'bg-slate-900/70', 'text-slate-300');
+        });
+
+        btn.classList.remove('border-slate-800/80', 'bg-slate-900/70', 'text-slate-300');
+        btn.classList.add('active');
+
+        const licType = btn.getAttribute('data-license');
+        if (licType === 'opensource') {
+          btn.classList.add('bg-emerald-500/20', 'border-emerald-500/50', 'text-emerald-300', 'shadow-sm');
+        } else if (licType === 'freemium') {
+          btn.classList.add('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300', 'shadow-sm');
+        } else if (licType === 'opencore') {
+          btn.classList.add('bg-purple-500/20', 'border-purple-500/50', 'text-purple-300', 'shadow-sm');
+        } else {
+          btn.classList.add('bg-slate-800', 'border-slate-600', 'text-white', 'shadow');
+        }
+
+        currentLicenseFilter = licType;
+        updateActiveFilterLabel();
+        filterTools();
+      });
+    });
+
+    // Ricerca real-time
+    searchInput.addEventListener('input', (e) => {
+      currentSearchTerm = e.target.value.trim().toLowerCase();
+      
+      if (currentSearchTerm.length > 0) {
+        clearSearchBtn.classList.remove('hidden');
+      } else {
+        clearSearchBtn.classList.add('hidden');
+      }
+
+      filterTools();
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchTerm = '';
+      clearSearchBtn.classList.add('hidden');
+      filterTools();
+      searchInput.focus();
+    });
+
+    resetSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchTerm = '';
+      clearSearchBtn.classList.add('hidden');
+      
+      const allCatBtn = document.querySelector('.category-btn[data-filter="all"]');
+      if (allCatBtn) allCatBtn.click();
+
+      const allLicBtn = document.querySelector('.license-btn[data-license="all"]');
+      if (allLicBtn) allLicBtn.click();
+    });
+
+    // Avvio
+    loadToolsFromSheet();
+  </script>
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corsi, MOOC & Formazione GIS | Ardilla Violeta</title>
+  <meta name="description" content="Directory curata delle migliori piattaforme, corsi universitari, academy e tutorial per imparare GIS, QGIS, Python geospaziale, WebGIS e Telerilevamento." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="bbceacbe-4230-437c-9322-366bde0f5edf"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#090d16',
+              surface: '#0f172a',
+              card: '#1e293b',
+              violet: '#8b5cf6',
+              violetGlow: '#a855f7',
+              indigo: '#6366f1',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+    }
+    
+    .topo-lines {
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.12), transparent 70%),
+                        radial-gradient(ellipse at 85% 85%, rgba(6, 182, 212, 0.08), transparent 60%);
+    }
+
+    .learning-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .learning-card:hover {
+      transform: translateY(-4px);
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-brand-violet selection:text-white flex flex-col justify-between">
+
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute inset-0 bg-grid-pattern opacity-80"></div>
+    <div class="absolute inset-0 topo-lines"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[380px] bg-gradient-to-tr from-brand-violet/15 via-brand-indigo/15 to-brand-cyan/15 blur-[130px] rounded-full"></div>
+    <div class="absolute top-[650px] -left-48 w-[500px] h-[500px] bg-brand-violet/10 blur-[140px] rounded-full"></div>
+    <div class="absolute top-[1200px] -right-48 w-[550px] h-[550px] bg-brand-cyan/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <!-- STICKY TOP STATUS BAR -->
+  <div class="relative z-30 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md px-4 sm:px-8 py-1.5 text-[11px] font-mono text-slate-400 flex justify-between items-center tracking-wider">
+    <div class="flex items-center space-x-3 truncate">
+      <span class="flex items-center text-brand-cyan">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-ping mr-1.5"></span>
+        GIS_LEARNING_HUB // FORMAZIONE & ACCADEMIE
+      </span>
+      <span class="hidden md:inline text-slate-700">|</span>
+      <span class="hidden md:inline text-slate-400">MOOC / TUTORIAL / ACADEMY / WEBINAR</span>
+    </div>
+    <div class="flex items-center space-x-3 text-brand-violet shrink-0">
+      <span class="text-slate-400">PROVIDER ATTIVI:</span>
+      <span id="topLiveCounter" class="font-bold text-white">...</span>
+      <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-brand-violet"></i>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVBAR -->
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+    <div class="flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-slate-800 p-1 shadow-lg shadow-brand-violet/20 group-hover:scale-105 group-hover:border-brand-violet/50 transition duration-300">
+          <img src="assets/logo.png" alt="Ardilla Violeta GIS Logo" class="w-full h-full object-contain rounded-xl" />
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-violet rounded-full border-2 border-[#090d16] animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-white group-hover:text-brand-violet transition">Ardilla Violeta</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">GIS & Geodata Hub Italiano</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 border border-slate-800 rounded-full p-1.5 backdrop-blur-md shadow-lg">
+        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Home
+        </a>
+        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Tool GIS
+        </a>
+        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Open Data
+        </a>
+        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Directory
+        </a>
+        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-white rounded-full bg-slate-800/90 shadow transition">
+          Formazione
+        </a>
+        <a href="jobs.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Lavoro & Bandi
+        </a>
+      </nav>
+
+      <!-- CTA & Mobile Toggle Button -->
+      <div class="flex items-center gap-2">
+        <a href="#suggest" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-brand-violet text-xs font-medium text-slate-200 hover:text-white transition shadow-sm">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-brand-violet"></i>
+          <span>Segnala Corso</span>
+        </a>
+
+        <!-- Hamburger Button Mobile -->
+        <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition" aria-label="Apri menu">
+          <i data-lucide="menu" id="menuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-3 p-4 rounded-2xl bg-slate-950/95 border border-slate-800 backdrop-blur-xl shadow-2xl flex flex-col gap-2 transition-all">
+      <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="home" class="w-4 h-4"></i> Home
+      </a>
+      <a href="tools.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="wrench" class="w-4 h-4 text-brand-violet"></i> Tool GIS
+      </a>
+      <a href="opendata.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="database" class="w-4 h-4 text-brand-cyan"></i> Open Data
+      </a>
+      <a href="directory.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="users" class="w-4 h-4 text-brand-violet"></i> Directory
+      </a>
+      <a href="learning.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-violet/20 text-brand-violet border border-brand-violet/40 flex items-center gap-2">
+        <i data-lucide="graduation-cap" class="w-4 h-4"></i> Formazione
+      </a>
+      <a href="jobs.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="briefcase" class="w-4 h-4 text-brand-emerald"></i> Lavoro & Bandi
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow">
+
+    <!-- HERO HEADER & REAL-TIME SEARCH -->
+    <div class="text-center max-w-3xl mx-auto space-y-6">
+      
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand-violet/30 bg-brand-violet/10 text-brand-violet text-xs font-mono tracking-wide shadow-md backdrop-blur-md">
+        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+        <span>Piattaforme di Formazione & Academy GIS // Ecosystem</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-white">
+        Directory Piattaforme & <span class="bg-gradient-to-r from-brand-violet via-purple-400 to-brand-cyan bg-clip-text text-transparent">Provider di Formazione GIS</span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+        Una raccolta selezionata dei migliori portali MOOC, corsi universitari, academy professionali e tutorial per padroneggiare QGIS, Python geospaziale, WebGIS e Telerilevamento.
+      </p>
+
+      <!-- Real-time Search Input -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <div class="relative group">
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-violet via-brand-indigo to-brand-cyan rounded-2xl blur opacity-30 group-focus-within:opacity-75 transition duration-300"></div>
+          <div class="relative flex items-center bg-slate-900/90 border border-slate-700/80 rounded-xl overflow-hidden backdrop-blur-xl shadow-2xl">
+            <div class="pl-4.5 pr-2 text-slate-400 flex items-center justify-center">
+              <i data-lucide="search" class="w-5 h-5 group-focus-within:text-brand-violet transition"></i>
+            </div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Cerca per provider, tecnologia, tag (es. QGIS, Python, LiDAR, NASA, PostGIS)..." 
+              class="w-full py-3.5 px-3 bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
+              autocomplete="off"
+            />
+            <button 
+              id="clearSearchBtn" 
+              class="hidden mr-3 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" 
+              title="Azzera ricerca"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FILTER CONTROLS (COSTO/TIPOLOGIA & LINGUA) -->
+    <div class="mt-10 mb-8 space-y-4 max-w-5xl mx-auto">
+      
+      <!-- PRICING / TYPE FILTER PILLS -->
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <button 
+          data-pricing="all" 
+          class="pricing-btn active px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 bg-brand-violet text-white font-bold border-brand-violet shadow-lg shadow-brand-violet/25 flex items-center gap-1.5"
+        >
+          <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+          <span>Tutti i Percorsi</span>
+        </button>
+
+        <button 
+          data-pricing="free" 
+          class="pricing-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="gift" class="w-3.5 h-3.5 text-brand-emerald"></i>
+          <span>100% Gratuiti & MOOC</span>
+        </button>
+
+        <button 
+          data-pricing="freemium" 
+          class="pricing-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Freemium & Free Tier</span>
+        </button>
+
+        <button 
+          data-pricing="paid" 
+          class="pricing-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-indigo-300 hover:border-indigo-500/40 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <i data-lucide="credit-card" class="w-3.5 h-3.5 text-brand-indigo"></i>
+          <span>Piattaforme a Pagamento</span>
+        </button>
+      </div>
+
+      <!-- LANGUAGE FILTER PILLS -->
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+        <span class="text-[11px] font-mono text-slate-400 mr-1 flex items-center gap-1">
+          <i data-lucide="languages" class="w-3 h-3 text-brand-violet"></i>
+          <span>Lingua:</span>
+        </span>
+
+        <button 
+          data-lang="all" 
+          class="lang-btn active px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-800 text-white border-slate-600 shadow flex items-center gap-1.5"
+        >
+          <span>Tutte le Lingue</span>
+        </button>
+
+        <button 
+          data-lang="it" 
+          class="lang-btn px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-800/80 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <span>🇮🇹 Italiano</span>
+        </button>
+
+        <button 
+          data-lang="en" 
+          class="lang-btn px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-800/80 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5"
+        >
+          <span>🇬🇧 Inglese</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ACTIVE STATS & COUNTER BAR -->
+    <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-6 px-1 border-b border-slate-800/60 pb-3">
+      <div class="flex items-center gap-2">
+        <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-brand-violet"></i>
+        <span>Piattaforme disponibili: <strong id="visibleCount" class="text-white font-bold">...</strong></span>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        Filtro attivo: <span id="activeFilterLabel" class="text-brand-violet font-semibold">Tutti i Percorsi</span>
+      </div>
+    </div>
+
+    <!-- CARDS GRID (Generata dal Foglio Google con Fallback) -->
+    <div id="learningGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+      <div class="col-span-full text-center py-12 text-slate-400 font-mono text-xs flex items-center justify-center gap-2">
+        <svg class="animate-spin h-4 w-4 text-brand-violet" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Caricamento catalogo corsi e provider in corso...
+      </div>
+    </div>
+
+    <!-- ZERO RESULTS FALLBACK -->
+    <div id="noResults" class="hidden my-16 text-center max-w-md mx-auto p-8 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md">
+      <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
+        <i data-lucide="filter-x" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-bold text-white mb-1">Nessuna piattaforma trovata</h3>
+      <p class="text-xs text-slate-400 mb-4">Nessun provider di formazione corrisponde ai parametri cercati.</p>
+      <button id="resetSearchBtn" class="px-4 py-2 rounded-xl bg-brand-violet text-white font-bold text-xs hover:bg-violet-600 transition">
+        Azzera filtri di ricerca
+      </button>
+    </div>
+
+    <!-- BOTTOM CTA: SEGNALA CORSO / PROVIDER -->
+    <section id="suggest" class="mt-20 lg:mt-28">
+      <div class="relative p-1 rounded-3xl bg-gradient-to-r from-brand-violet/40 via-brand-indigo/30 to-brand-cyan/40 shadow-2xl">
+        <div class="bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-8 sm:p-12 border border-slate-800">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-8 space-y-3 text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-violet/30 bg-brand-violet/10 text-brand-violet text-xs font-mono">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>Open GIS Knowledge</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Offri corsi o gestisci una piattaforma di formazione GIS?
+              </h2>
+              <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
+                Contribuisci alla crescita della community geospaziale italiana. Segnalaci la tua academy, MOOC, canale YouTube o workshop per inserirli gratuitamente nella directory.
+              </p>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+              <a 
+                href="mailto:pixie4284@gmail.com?subject=Segnalazione%20Piattaforma%20o%20Corso%20GIS&body=Nome%20Provider/Piattaforma:%0ATipologia%20(MOOC/Academy/Tutorial):%0ALingua%20(Italiano/Inglese):%0AModello%20di%20Costo%20(Gratuito/Freemium/A%20pagamento):%0AAmbiti%20Principali%20(es.%20QGIS,%20Remote%20Sensing,%20Python):%0ALink%20Sito/Corsi:%0ABreve%20Descrizione:" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-brand-violet to-brand-indigo hover:from-brand-violetGlow hover:to-indigo-500 shadow-lg shadow-brand-violet/25 active:scale-[0.98] transition duration-200 text-center"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Segnala Piattaforma / Corso</span>
+              </a>
+              <a 
+                href="directory.html" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-slate-300 bg-slate-900 border border-slate-700 hover:border-slate-600 hover:text-white transition duration-200 text-center"
+              >
+                <i data-lucide="users" class="w-4 h-4 text-brand-cyan"></i>
+                <span>Esplora la Directory</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-20 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex flex-col items-center md:items-start text-center md:text-left space-y-1">
+          <div class="flex items-center gap-2">
+            <i data-lucide="compass" class="w-4 h-4 text-brand-violet"></i>
+            <span class="font-bold text-slate-200">Ardilla Violeta</span>
+            <span class="text-slate-400 text-xs">— GIS Hub Italiano</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Progetto indipendente per la community geospaziale, cartografica e GIS italiana.
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition" title="GitHub">
+            <i data-lucide="github" class="w-4 h-4"></i>
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#0a66c2] hover:border-slate-700 transition" title="LinkedIn">
+            <i data-lucide="linkedin" class="w-4 h-4"></i>
+          </a>
+          <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-cyan hover:border-slate-700 transition" title="Telegram Community">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-3">
+        <p>&copy; 2026 Ardilla Violeta. Tutti i diritti riservati.</p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="index.html" class="hover:text-white transition">Home</a>
+          <a href="tools.html" class="hover:text-white transition">Tool GIS</a>
+          <a href="opendata.html" class="hover:text-white transition">Open Data</a>
+          <a href="directory.html" class="hover:text-white transition">Directory</a>
+          <a href="learning.html" class="hover:text-white transition text-brand-violet">Formazione</a>
+          <a href="jobs.html" class="hover:text-white transition">Lavoro & Bandi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT: COLLEGAMENTO GOOGLE SHEETS LEARNING + FILTRI + MENU -->
+  <script>
+    // URL CSV della scheda "Learning"
+    const LEARNING_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR2XVI2-Dn3AZXojSPw1ymqkrCYkKSgqywMI075iKZGzC1VYhvONXl1v0k3BTOYiT-jKg7p48HzT5_f/pub?gid=1106813450&single=true&output=csv';
+
+    // Catalogo iniziale di riserva (Allineato 1:1 ai dati del Foglio Google)
+    const FALLBACK_LEARNING = [
+      {
+        provider: "ESA-EO Training Academy",
+        type: "Piattaforma MOOC",
+        languages: "Inglese",
+        pricing: "100% gratuito",
+        focus_topics: "Remote Sensing, SAR, Optical, Earth Observation",
+        description: "Piattaforma promossa da ESA con corsi MOOC completi e interattivi su elaborazione radar, ottica e monitoraggio satellitare.",
+        tags: "#RemoteSensing, #SAR, #Copernicus, #Sentinel, #MOOC",
+        url: "https://eo-college.org",
+        icon: "satellite"
+      },
+      {
+        provider: "Terre Logiche",
+        type: "Società di Formazione",
+        languages: "Italiano",
+        pricing: "A pagamento / Certificato",
+        focus_topics: "QGIS, PostGIS, WebGIS, Droni, Geologia",
+        description: "Corsi professionali e masterclass online/in presenza in lingua italiana con rilascio di crediti formativi (APC/CNI).",
+        tags: "#QGIS, #PostGIS, #WebGIS, #Droni, #Certificazioni, #Italiano",
+        url: "https://www.terrelogiche.com/formazione",
+        icon: "award"
+      },
+      {
+        provider: "Spatial Thoughts (Ujaval Gandhi)",
+        type: "Community & Open Docs",
+        languages: "Inglese",
+        pricing: "100% gratuito",
+        focus_topics: "QGIS Avanzato, Python, Google Earth Engine",
+        description: "Uno dei repository di tutorial aperti e corsi gratuiti (PDF/Jupyter) più autorevoli al mondo per QGIS e GEE.",
+        tags: "#QGIS, #Python, #GoogleEarthEngine, #OpenAccess, #Tutorial",
+        url: "https://spatialthoughts.com/courses/",
+        icon: "book-open"
+      },
+      {
+        provider: "Gter",
+        type: "Società di Formazione",
+        languages: "Italiano",
+        pricing: "A pagamento / Certificato",
+        focus_topics: "GIS Open Source, QGIS, Topografia, WebGIS",
+        description: "Corsi tecnici specifici su software open source, geodati e applicazioni per professionisti e PA.",
+        tags: "#QGIS, #OpenSource, #Geomatica, #Formazione, #Italiano",
+        url: "https://www.gter.it/formazione/",
+        icon: "layers"
+      },
+      {
+        provider: "GeoCorsi",
+        type: "Società di Formazione / E-Learning",
+        languages: "Italiano",
+        pricing: "A pagamento / Certificato",
+        focus_topics: "GIS, QGIS, Cartografia, Idrologia, Geologia Tecnica",
+        description: "Piattaforma e-learning italiana specializzata in geologia, ambiente e GIS. Offre corsi online asincroni e webinar con rilascio di crediti formativi professionali (APC/CFP).",
+        tags: "#QGIS, #Geocorsi, #CFP, #APC, #Geologia, #Cartografia, #Italiano",
+        url: "https://www.geocorsi.it/170/corsi.html",
+        icon: "graduation-cap"
+      }
+    ];
+
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.toggle('hidden');
+        if (menuIcon) {
+          menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    const learningGrid = document.getElementById('learningGrid');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const pricingBtns = document.querySelectorAll('.pricing-btn');
+    const langBtns = document.querySelectorAll('.lang-btn');
+    const visibleCountEl = document.getElementById('visibleCount');
+    const topLiveCounterEl = document.getElementById('topLiveCounter');
+    const activeFilterLabel = document.getElementById('activeFilterLabel');
+    const noResults = document.getElementById('noResults');
+    const resetSearchBtn = document.getElementById('resetSearchBtn');
+
+    let allCourses = [];
+    let currentPricingFilter = 'all';
+    let currentLangFilter = 'all';
+    let currentSearchTerm = '';
+
+    // Parser CSV Universale
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+
+      const isTab = lines[0].includes('\t');
+      const headers = isTab 
+        ? lines[0].split('\t').map(h => h.trim().toLowerCase()) 
+        : lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+
+      const result = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].trim();
+        if (!row) continue;
+
+        let values = [];
+        if (isTab) {
+          values = row.split('\t');
+        } else {
+          values = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || row.split(',');
+        }
+
+        const entry = {};
+        headers.forEach((h, index) => {
+          let val = values[index] ? values[index].trim() : '';
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.substring(1, val.length - 1).replace(/""/g, '"');
+          }
+          entry[h] = val;
+        });
+        result.push(entry);
+      }
+      return result;
+    }
+
+    // Configurazione badge Pricing
+    function getPricingConfig(rawPricing) {
+      const p = (rawPricing || '').toLowerCase().trim();
+      
+      if (!p || p.includes('gratis') || p.includes('gratuito') || p.includes('free') || p.includes('open')) {
+        return {
+          type: 'free',
+          label: rawPricing || '100% Gratuito',
+          badgeClass: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
+          icon: 'gift'
+        };
+      }
+      if (p.includes('freemium') || p.includes('free tier') || p.includes('audit')) {
+        return {
+          type: 'freemium',
+          label: rawPricing || 'Freemium',
+          badgeClass: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
+          icon: 'sparkles'
+        };
+      }
+      return {
+        type: 'paid',
+        label: rawPricing || 'A pagamento / Certificato',
+        badgeClass: 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30',
+        icon: 'credit-card'
+      };
+    }
+
+    // Configurazione badge Lingua
+    function getLanguageConfig(rawLang) {
+      const l = (rawLang || '').toLowerCase().trim();
+      
+      const hasIt = l.includes('it') || l.includes('italiano');
+      const hasEn = l.includes('en') || l.includes('inglese') || l.includes('english');
+      
+      let normCode = 'en';
+      let label = rawLang || 'Inglese';
+
+      if (hasIt && hasEn) {
+        normCode = 'multi';
+        label = 'Italiano / Inglese';
+      } else if (hasIt) {
+        normCode = 'it';
+        label = 'Italiano';
+      } else if (hasEn) {
+        normCode = 'en';
+        label = 'Inglese';
+      }
+
+      return {
+        code: normCode,
+        label: label,
+        hasIt: hasIt,
+        hasEn: hasEn,
+        badgeClass: 'bg-slate-800 text-slate-300 border border-slate-700'
+      };
+    }
+
+    // Generazione Markup Card Singola
+    function renderCard(item) {
+      const provider = item.provider || item.name || item.titolo || item.title || item.nome || 'Provider Formazione';
+      const type = item.type || item.tipo || item.tipologia || 'Piattaforma Online';
+      const languages = item.languages || item.language || item.lingua || item.lingue || 'Inglese';
+      const pricing = item.pricing || item.price || item.modello || item.costo || 'Gratuito';
+      const description = item.description || item.descrizione || '';
+      const focusTopics = item.focus_topics || item.focus || item.topics || item.argomenti || '';
+      const tags = item.tags || '';
+      const url = item.url || item.link || item.website || '#';
+      
+      // Calcolo icona tematica automatica se non fornita
+      let customIcon = item.icon;
+      if (!customIcon) {
+        const textToMatch = (provider + ' ' + type + ' ' + focusTopics).toLowerCase();
+        if (textToMatch.includes('satellite') || textToMatch.includes('remote sensing') || textToMatch.includes('sar') || textToMatch.includes('esa')) {
+          customIcon = 'satellite';
+        } else if (textToMatch.includes('tutorial') || textToMatch.includes('docs') || textToMatch.includes('thoughts')) {
+          customIcon = 'book-open';
+        } else if (textToMatch.includes('terre logiche') || textToMatch.includes('certificat')) {
+          customIcon = 'award';
+        } else if (textToMatch.includes('gter') || textToMatch.includes('topografia')) {
+          customIcon = 'layers';
+        } else if (textToMatch.includes('geocorsi') || textToMatch.includes('e-learning')) {
+          customIcon = 'graduation-cap';
+        } else {
+          customIcon = 'graduation-cap';
+        }
+      }
+
+      const pricingConfig = getPricingConfig(pricing);
+      const langConfig = getLanguageConfig(languages);
+
+      const tagsList = tags
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0)
+        .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">${t.startsWith('#') ? t : '#' + t}</span>`)
+        .join('');
+
+      return `
+        <div class="learning-card group relative rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 flex flex-col justify-between hover:border-brand-violet/60 hover:shadow-brand-violet/10"
+             data-pricing="${pricingConfig.type}"
+             data-lang-it="${langConfig.hasIt}"
+             data-lang-en="${langConfig.hasEn}"
+             data-keywords="${(provider + ' ' + type + ' ' + languages + ' ' + pricing + ' ' + description + ' ' + focusTopics + ' ' + tags).toLowerCase()}">
+          
+          <div>
+            <!-- Header Card: Icona, Titolo, Link esterno -->
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-11 h-11 rounded-xl bg-purple-950/60 border border-purple-500/30 text-brand-violet flex items-center justify-center font-extrabold text-sm shadow-inner group-hover:scale-105 transition shrink-0">
+                  <i data-lucide="${customIcon}" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                  <h2 class="text-lg font-bold text-white group-hover:text-brand-violet transition leading-snug truncate">
+                    ${provider}
+                  </h2>
+                  <span class="text-[11px] font-mono uppercase tracking-wider text-brand-cyan">${type}</span>
+                </div>
+              </div>
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700 transition shrink-0" title="Visita la piattaforma">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <!-- Badge distintivi (Lingua e Modello di Costo) -->
+            <div class="flex items-center flex-wrap gap-2 mb-3.5">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-mono font-semibold border ${pricingConfig.badgeClass}">
+                <i data-lucide="${pricingConfig.icon}" class="w-3 h-3"></i>
+                <span>${pricingConfig.label}</span>
+              </span>
+              
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-mono font-medium border ${langConfig.badgeClass}">
+                <i data-lucide="languages" class="w-3 h-3 text-slate-400"></i>
+                <span>${langConfig.label}</span>
+              </span>
+            </div>
+
+            <!-- Descrizione -->
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              ${description}
+            </p>
+
+            <!-- Focus Topics se presente -->
+            ${focusTopics ? `
+              <div class="mb-4 text-[11px] bg-slate-900/90 border border-slate-800/80 rounded-xl p-2.5 text-slate-300 flex items-start gap-2">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-brand-violet shrink-0 mt-0.5"></i>
+                <span class="leading-tight"><strong class="text-white">Ambiti:</strong> ${focusTopics}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Bottom: Tags e Bottone Esplora Corsi -->
+          <div>
+            ${tagsList ? `
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                ${tagsList}
+              </div>
+            ` : ''}
+            
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-end text-[11px] font-mono">
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="text-brand-violet hover:text-brand-cyan hover:underline inline-flex items-center gap-1 font-semibold transition">
+                Esplora Corsi <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    // Aggiornamento etichetta filtri attivi
+    function updateActiveFilterLabel() {
+      const activePriceBtn = document.querySelector('.pricing-btn.active');
+      const priceText = activePriceBtn && activePriceBtn.querySelector('span') ? activePriceBtn.querySelector('span').innerText : 'Tutti i Percorsi';
+      
+      const activeLangBtn = document.querySelector('.lang-btn.active');
+      const langText = activeLangBtn && activeLangBtn.querySelector('span') ? activeLangBtn.querySelector('span').innerText : 'Tutte le Lingue';
+
+      if (currentLangFilter === 'all') {
+        activeFilterLabel.textContent = priceText;
+      } else if (currentPricingFilter === 'all') {
+        activeFilterLabel.textContent = `Tutti i Percorsi • ${langText}`;
+      } else {
+        activeFilterLabel.textContent = `${priceText} • ${langText}`;
+      }
+    }
+
+    // Filtraggio dinamico combinato (Costo + Lingua + Ricerca)
+    function filterLearning() {
+      const cards = document.querySelectorAll('.learning-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const pricing = (card.getAttribute('data-pricing') || '').toLowerCase();
+        const hasIt = card.getAttribute('data-lang-it') === 'true';
+        const hasEn = card.getAttribute('data-lang-en') === 'true';
+        const keywords = card.getAttribute('data-keywords') || '';
+
+        // Match Pricing
+        let matchesPricing = (currentPricingFilter === 'all' || pricing === currentPricingFilter);
+        
+        // Match Lingua
+        let matchesLang = true;
+        if (currentLangFilter === 'it') {
+          matchesLang = hasIt;
+        } else if (currentLangFilter === 'en') {
+          matchesLang = hasEn;
+        }
+
+        // Match Search
+        const matchesSearch = currentSearchTerm === '' || keywords.includes(currentSearchTerm);
+
+        if (matchesPricing && matchesLang && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      visibleCountEl.textContent = visibleCount;
+      if (topLiveCounterEl) topLiveCounterEl.textContent = visibleCount;
+
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    }
+
+    // Scarica i dati da Google Sheets con Fallback automatico
+    async function loadLearningFromSheet() {
+      try {
+        const response = await fetch(LEARNING_CSV_URL);
+        if (!response.ok) throw new Error('Sheet non disponibile');
+        const csvText = await response.text();
+        const parsed = parseCSV(csvText);
+
+        if (parsed.length > 0) {
+          allCourses = parsed;
+        } else {
+          allCourses = FALLBACK_LEARNING;
+        }
+      } catch (error) {
+        console.warn('Utilizzo catalogo formativo di riserva:', error);
+        allCourses = FALLBACK_LEARNING;
+      }
+
+      learningGrid.innerHTML = allCourses.map(item => renderCard(item)).join('');
+      lucide.createIcons();
+      filterLearning();
+    }
+
+    // Event listener pulsanti Pricing
+    pricingBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        pricingBtns.forEach(b => {
+          b.classList.remove('active', 'bg-brand-violet', 'text-white', 'font-bold', 'border-brand-violet', 'shadow-lg', 'shadow-brand-violet/25');
+          b.classList.add('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+        });
+
+        btn.classList.add('active', 'bg-brand-violet', 'text-white', 'font-bold', 'border-brand-violet', 'shadow-lg', 'shadow-brand-violet/25');
+        btn.classList.remove('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+
+        currentPricingFilter = btn.getAttribute('data-pricing');
+        updateActiveFilterLabel();
+        filterLearning();
+      });
+    });
+
+    // Event listener pulsanti Lingua
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        langBtns.forEach(b => {
+          b.classList.remove('active', 'bg-slate-800', 'border-slate-600', 'text-white', 'shadow');
+          b.classList.add('border-slate-800/80', 'bg-slate-900/70', 'text-slate-300');
+        });
+
+        btn.classList.remove('border-slate-800/80', 'bg-slate-900/70', 'text-slate-300');
+        btn.classList.add('active', 'bg-slate-800', 'border-slate-600', 'text-white', 'shadow');
+
+        currentLangFilter = btn.getAttribute('data-lang');
+        updateActiveFilterLabel();
+        filterLearning();
+      });
+    });
+
+    // Ricerca real-time
+    searchInput.addEventListener('input', (e) => {
+      currentSearchTerm = e.target.value.trim().toLowerCase();
+      clearSearchBtn.classList.toggle('hidden', currentSearchTerm.length === 0);
+      filterLearning();
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchTerm = '';
+      clearSearchBtn.classList.add('hidden');
+      filterLearning();
+      searchInput.focus();
+    });
+
+    resetSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchTerm = '';
+      clearSearchBtn.classList.add('hidden');
+      
+      const allPriceBtn = document.querySelector('.pricing-btn[data-pricing="all"]');
+      if (allPriceBtn) allPriceBtn.click();
+
+      const allLangBtn = document.querySelector('.lang-btn[data-lang="all"]');
+      if (allLangBtn) allLangBtn.click();
+    });
+
+    // Avvio
+    loadLearningFromSheet();
+  </script>
+</body>
+</html>
+

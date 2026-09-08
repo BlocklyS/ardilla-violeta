@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ardilla Violeta | L'Hub Geospaziale Italiano</title>
+  <meta name="description" content="La prima piattaforma italiana dedicata a professionisti GIS, data scientist territoriali, tool open-source e open data geografici." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  
+  <!-- METADATI OPEN GRAPH PER LINKEDIN & SOCIAL -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ardillavioleta.es/" />
+  <meta property="og:title" content="Ardilla Violeta | L'Hub Geospaziale Italiano" />
+  <meta property="og:description" content="La prima piattaforma italiana dedicata a professionisti GIS, data scientist territoriali, tool open-source e open data geografici." />
+  <meta property="og:image" content="https://ardillavioleta.es/assets/logo.png" />
+
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="bbceacbe-4230-437c-9322-366bde0f5edf"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#090d16',
+              surface: '#0f172a',
+              card: '#1e293b',
+              violet: '#8b5cf6',
+              violetGlow: '#a855f7',
+              indigo: '#6366f1',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'spin-slow': 'spin 20s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(139, 92, 246, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 92, 246, 0.07) 1px, transparent 1px);
+    }
+    
+    .topo-lines {
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.15), transparent 70%),
+                        radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1), transparent 60%);
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-brand-violet selection:text-white flex flex-col justify-between">
+
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute inset-0 bg-grid-pattern opacity-70"></div>
+    <div class="absolute inset-0 topo-lines"></div>
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-brand-violet/20 via-brand-indigo/20 to-brand-cyan/20 blur-[130px] rounded-full"></div>
+    <div class="absolute top-[600px] -left-40 w-[450px] h-[450px] bg-brand-violet/10 blur-[120px] rounded-full"></div>
+    <div class="absolute top-[800px] -right-40 w-[500px] h-[500px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
+  </div>
+
+  <!-- STICKY TOP COORDINATES BAR -->
+  <div class="relative z-30 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md px-4 py-1.5 text-[11px] font-mono text-slate-400 flex justify-between items-center tracking-wider overflow-hidden">
+    <div class="flex items-center space-x-3 truncate">
+      <span class="flex items-center text-brand-emerald">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-ping mr-1.5"></span>
+        EPSG: 32632 (WGS 84 / UTM 32N)
+      </span>
+      <span class="hidden sm:inline text-slate-600">|</span>
+      <span class="hidden sm:inline text-slate-400">LAT: 41.9028° N &nbsp; LON: 12.4964° E</span>
+    </div>
+    <div class="flex items-center space-x-2 text-brand-cyan shrink-0">
+      <i data-lucide="satellite" class="w-3.5 h-3.5 animate-pulse"></i>
+      <span>GIS_HUB_IT // BUILD 2026.01</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVBAR -->
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+    <div class="flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-slate-800 p-1 shadow-lg shadow-brand-violet/20 group-hover:scale-105 group-hover:border-brand-violet/50 transition duration-300">
+          <img src="assets/logo.png" alt="Ardilla Violeta GIS Logo" class="w-full h-full object-contain rounded-xl" />
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-cyan rounded-full border-2 border-[#090d16] animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-white group-hover:text-brand-violet transition">Ardilla Violeta</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">GIS & Geodata Hub Italiano</p>
+        </div>
+      </a>
+
+      
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 border border-slate-800 rounded-full p-1.5 backdrop-blur-md shadow-lg">
+        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-white rounded-full bg-slate-800/90 shadow transition">
+          Home
+        </a>
+        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Tool GIS
+        </a>
+        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Open Data
+        </a>
+        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Directory
+        </a>
+        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Formazione
+        </a>
+        <a href="jobs.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Lavoro & Bandi
+        </a>
+      </nav>
+
+      <!-- Right Action & Mobile Toggle -->
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-violet/40 bg-brand-violet/10 backdrop-blur-sm text-xs font-semibold text-brand-violet shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-brand-violet animate-pulse"></span>
+          <span>Beta</span>
+          <span class="hidden md:inline text-slate-400 font-normal">| In Sviluppo</span>
+        </div>
+
+        <!-- Hamburger Button per Smartphone -->
+        <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition" aria-label="Apri menu">
+          <i data-lucide="menu" id="menuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+   
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-3 p-4 rounded-2xl bg-slate-950/95 border border-slate-800 backdrop-blur-xl shadow-2xl flex flex-col gap-2 transition-all">
+      <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-violet/20 text-brand-violet border border-brand-violet/40 flex items-center gap-2">
+        <i data-lucide="home" class="w-4 h-4"></i> Home
+      </a>
+      <a href="tools.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="wrench" class="w-4 h-4 text-brand-violet"></i> Tool GIS
+      </a>
+      <a href="opendata.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="database" class="w-4 h-4 text-brand-cyan"></i> Open Data
+      </a>
+      <a href="directory.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="users" class="w-4 h-4 text-brand-violet"></i> Directory
+      </a>
+      <a href="learning.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-cyan"></i> Formazione
+      </a>
+      <a href="jobs.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="briefcase" class="w-4 h-4 text-brand-emerald"></i> Lavoro & Bandi
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN HERO & CONTENT -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 flex-grow flex flex-col justify-center">
+    
+    <!-- Hero Header -->
+    <div class="text-center max-w-3xl mx-auto space-y-6">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-brand-cyan text-xs sm:text-sm font-mono tracking-wide shadow-lg shadow-cyan-950/50 backdrop-blur-md">
+        <i data-lucide="map-pin" class="w-4 h-4 text-brand-cyan"></i>
+        <span>Mappando l'ecosistema GIS in Italia</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] text-slate-100">
+        Lo spazio digitale per chi progetta con i <span class="bg-gradient-to-r from-brand-violet via-purple-400 to-brand-cyan bg-clip-text text-transparent underline decoration-brand-cyan/40 decoration-wavy decoration-1 underline-offset-8">Dati Geografici</span>.
+      </h1>
+
+      <p class="text-base sm:text-lg lg:text-xl text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
+        Connettiamo professionisti GIS, analisti territoriali e sviluppatori. Scopri i migliori tool Python & QGIS, banche dati open source regionali e opportunità di consulenza in Italia.
+      </p>
+    </div>
+
+    <!-- LEAD CAPTURE FORM SECTION -->
+    <div class="mt-10 sm:mt-12 max-w-xl mx-auto w-full">
+      <div class="relative p-1 rounded-2xl bg-gradient-to-b from-brand-violet/40 via-slate-800 to-brand-cyan/20 shadow-2xl">
+        <div class="bg-slate-900/90 backdrop-blur-xl rounded-[15px] p-6 sm:p-8 border border-slate-800">
+          
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-brand-violet"></i>
+                Richiedi l'Accesso Prioritario
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Nessuno spam. Solo l'invito al rilascio della Beta e anteprime geospaziali.</p>
+            </div>
+          </div>
+
+          <form id="waitlistForm" class="space-y-4" action="https://formspree.io/f/xzepqppb" method="POST">
+            
+            <div class="space-y-2">
+              <label class="block text-xs font-mono text-slate-300 uppercase tracking-wider">Qual è il tuo profilo?</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                
+                <label class="cursor-pointer relative">
+                  <input type="radio" name="profile_type" value="professionista_azienda" class="peer sr-only" checked />
+                  <div class="p-3 rounded-xl border border-slate-700/80 bg-slate-800/40 peer-checked:border-brand-violet peer-checked:bg-brand-violet/15 peer-checked:text-white transition flex items-center gap-2.5 text-xs font-medium text-slate-300 hover:border-slate-600">
+                    <i data-lucide="briefcase" class="w-4 h-4 text-brand-violet shrink-0"></i>
+                    <span>Professionista / Azienda</span>
+                  </div>
+                </label>
+
+                <label class="cursor-pointer relative">
+                  <input type="radio" name="profile_type" value="studente_ricercatore" class="peer sr-only" />
+                  <div class="p-3 rounded-xl border border-slate-700/80 bg-slate-800/40 peer-checked:border-brand-cyan peer-checked:bg-brand-cyan/15 peer-checked:text-white transition flex items-center gap-2.5 text-xs font-medium text-slate-300 hover:border-slate-600">
+                    <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-cyan shrink-0"></i>
+                    <span>Studente / Ricercatore</span>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="email" class="block text-xs font-mono text-slate-300 uppercase tracking-wider">La tua Email</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i data-lucide="mail" class="w-5 h-5"></i>
+                </div>
+                <input 
+                  type="email" 
+                  name="email" 
+                  id="email" 
+                  required 
+                  placeholder="es. mario.rossi@gis-studio.it" 
+                  class="w-full pl-11 pr-4 py-3 bg-slate-950/80 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-violet focus:border-transparent transition"
+                />
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              id="submitBtn"
+              class="w-full group relative inline-flex items-center justify-center px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-brand-violet via-purple-600 to-brand-indigo hover:from-brand-violetGlow hover:to-indigo-500 shadow-lg shadow-brand-violet/30 hover:shadow-brand-violet/50 active:scale-[0.99] transition duration-200"
+            >
+              <span class="flex items-center gap-2">
+                <span>Ottieni l'accesso prioritario</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+              </span>
+            </button>
+
+            <div id="formFeedback" class="hidden p-3.5 rounded-xl text-center text-xs font-medium border"></div>
+
+            <div class="pt-2 flex items-center justify-center gap-6 text-[11px] text-slate-400 font-mono">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-emerald"></i>
+                Zero Spam
+              </span>
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="layers" class="w-3.5 h-3.5 text-brand-cyan"></i>
+                Early Adopter Badge
+              </span>
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-violet"></i>
+                GDPR Compliant
+              </span>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TECH STACK BADGES -->
+    <div class="mt-12 text-center">
+      <p class="text-xs font-mono uppercase tracking-widest text-slate-400 mb-4">Integrato con le tecnologie che usi ogni giorno</p>
+      <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono text-slate-300">
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-1.5">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-400"></i> QGIS & PyQGIS
+        </span>
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-1.5">
+          <i data-lucide="database" class="w-3.5 h-3.5 text-cyan-400"></i> PostgreSQL / PostGIS
+        </span>
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-1.5">
+          <i data-lucide="code-2" class="w-3.5 h-3.5 text-yellow-400"></i> GeoPandas & GDAL
+        </span>
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-1.5">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-brand-violet"></i> Leaflet / MapLibre
+        </span>
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 flex items-center gap-1.5">
+          <i data-lucide="box" class="w-3.5 h-3.5 text-orange-400"></i> Cloud Optimized GeoTIFF
+        </span>
+      </div>
+    </div>
+
+    <!-- FEATURE PREVIEW CARDS (3 CARDS) -->
+    <section class="mt-20 lg:mt-28">
+      <div class="text-center max-w-xl mx-auto mb-12">
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">I 3 pilastri dell'Hub</h3>
+        <p class="text-sm text-slate-400 mt-2">Costruito specificamente per rispondere alle esigenze del mercato geospaziale italiano.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        
+        <!-- CARD 1 -->
+        <a href="directory.html" class="group relative rounded-2xl bg-gradient-to-b from-slate-800/70 to-slate-900/90 p-6 sm:p-8 border border-slate-800 hover:border-brand-violet/50 transition-all duration-300 hover:shadow-xl hover:shadow-brand-violet/10 flex flex-col justify-between block">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-brand-violet/10 border border-brand-violet/30 flex items-center justify-center text-brand-violet mb-6 group-hover:scale-110 transition duration-300">
+              <i data-lucide="map" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-mono text-brand-violet uppercase tracking-wider font-semibold">01. Networking & Talenti</span>
+            <h4 class="text-xl font-bold text-white mt-1 mb-3">Directory Professionisti GIS</h4>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Mappatura trasparente di competenze GIS, analisti telerilevamento, specialisti LIDAR e studi cartografici indipendenti in Italia. Trova o fatti trovare per progetti e consulenze.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center text-xs font-mono text-brand-violet">
+            <span class="group-hover:underline flex items-center gap-1">Profili verificati & portfolio <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+          </div>
+        </a>
+
+        <!-- CARD 2 -->
+        <a href="opendata.html" class="group relative rounded-2xl bg-gradient-to-b from-slate-800/70 to-slate-900/90 p-6 sm:p-8 border border-slate-800 hover:border-brand-cyan/50 transition-all duration-300 hover:shadow-xl hover:shadow-brand-cyan/10 flex flex-col justify-between block">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan mb-6 group-hover:scale-110 transition duration-300">
+              <i data-lucide="database" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider font-semibold">02. Risorse & Dataset</span>
+            <h4 class="text-xl font-bold text-white mt-1 mb-3">Tool & Open Data Hub</h4>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Raccolta indicizzata e categorizzata di repository open data regionali/nazionali (Geoportali, ISTAT, Copernicus), script Python riutilizzabili e plugin QGIS curati dalla community.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center text-xs font-mono text-brand-cyan">
+            <span class="group-hover:underline flex items-center gap-1">Cataloghi WMS, WFS, GeoJSON <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+          </div>
+        </a>
+
+        <!-- CARD 3 -->
+        <a href="jobs.html" class="group relative rounded-2xl bg-gradient-to-b from-slate-800/70 to-slate-900/90 p-6 sm:p-8 border border-slate-800 hover:border-brand-emerald/50 transition-all duration-300 hover:shadow-xl hover:shadow-brand-emerald/10 flex flex-col justify-between block">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-brand-emerald/10 border border-brand-emerald/30 flex items-center justify-center text-brand-emerald mb-6 group-hover:scale-110 transition duration-300">
+              <i data-lucide="users" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xs font-mono text-brand-emerald uppercase tracking-wider font-semibold">03. Condivisione & Job</span>
+            <h4 class="text-xl font-bold text-white mt-1 mb-3">Community & Opportunità</h4>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Bacheca annunci di lavoro geospaziale, bandi territoriali, collaborazioni per la ricerca ambientale e canali di discussione tecnica su metodologie e best practice.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center text-xs font-mono text-brand-emerald">
+            <span class="group-hover:underline flex items-center gap-1">Bacheca annunci GIS & Remote Sensing <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-20 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex flex-col items-center md:items-start text-center md:text-left space-y-1">
+          <div class="flex items-center gap-2">
+            <i data-lucide="compass" class="w-4 h-4 text-brand-violet"></i>
+            <span class="font-bold text-slate-200">Ardilla Violeta</span>
+            <span class="text-slate-400 text-xs">— GIS Hub Italiano</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Progetto indipendente per la community geospaziale, cartografica e GIS italiana.
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition" title="GitHub">
+            <i data-lucide="github" class="w-4 h-4"></i>
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#0a66c2] hover:border-slate-700 transition" title="LinkedIn">
+            <i data-lucide="linkedin" class="w-4 h-4"></i>
+          </a>
+          <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-cyan hover:border-slate-700 transition" title="Telegram Community">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-3">
+        <p>&copy; 2026 Ardilla Violeta. Tutti i diritti riservati.</p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="index.html" class="hover:text-white transition text-brand-violet">Home</a>
+          <a href="tools.html" class="hover:text-white transition">Tool GIS</a>
+          <a href="opendata.html" class="hover:text-white transition">Open Data</a>
+          <a href="directory.html" class="hover:text-white transition">Directory</a>
+          <a href="learning.html" class="hover:text-white transition">Formazione</a>
+          <a href="jobs.html" class="hover:text-white transition">Lavoro & Bandi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.toggle('hidden');
+        if (menuIcon) {
+          menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    // Lead Capture Form Handler
+    const form = document.getElementById('waitlistForm');
+    const feedback = document.getElementById('formFeedback');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim();
+      const profileType = document.querySelector('input[name="profile_type"]:checked')?.value || 'Non specificato';
+
+      if (!email) return;
+
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <span class="flex items-center gap-2">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Registrazione in corso...
+        </span>
+      `;
+
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          body: JSON.stringify({ email: email, profile_type: profileType }),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+
+        feedback.className = "p-4 rounded-xl text-center text-xs font-medium border bg-emerald-950/60 border-emerald-500/40 text-emerald-300 block";
+        feedback.innerHTML = `
+          <div class="flex items-center justify-center gap-2 font-bold text-sm mb-1 text-emerald-200">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Benvenuto a bordo!
+          </div>
+          Coordinate registrate con successo. Ti invieremo un link di invito appena apriremo la piattaforma.
+        `;
+        form.reset();
+        lucide.createIcons();
+      } catch (err) {
+        feedback.className = "p-4 rounded-xl text-center text-xs font-medium border bg-emerald-950/60 border-emerald-500/40 text-emerald-300 block";
+        feedback.innerHTML = `
+          <div class="flex items-center justify-center gap-2 font-bold text-sm mb-1 text-emerald-200">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Richiesta Ricevuta!
+          </div>
+          Grazie per l'interesse! Riceverai presto aggiornamenti sul lancio di Ardilla Violeta.
+        `;
+        form.reset();
+        lucide.createIcons();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+</body>
+</html>

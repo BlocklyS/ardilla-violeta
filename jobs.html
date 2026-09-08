@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bacheca Lavoro & Bandi GIS | Ardilla Violeta</title>
+  <meta name="description" content="Offerte di lavoro, posizioni aperte, progetti freelance e bandi per specialisti GIS, analisti territoriali e spatial data scientist in Italia." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  
+  <!-- METADATI OPEN GRAPH -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ardillavioleta.es/jobs.html" />
+  <meta property="og:title" content="Bacheca Lavoro & Bandi GIS | Ardilla Violeta" />
+  <meta property="og:description" content="Offerte di lavoro, posizioni aperte, progetti freelance e bandi per specialisti GIS e analisti territoriali in Italia." />
+  <meta property="og:image" content="https://ardillavioleta.es/assets/logo.png" />
+
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="bbceacbe-4230-437c-9322-366bde0f5edf"></script>
+
+  <!-- Leaflet.js & OpenStreetMap CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#090d16',
+              surface: '#0f172a',
+              card: '#1e293b',
+              violet: '#8b5cf6',
+              violetGlow: '#a855f7',
+              indigo: '#6366f1',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+    }
+    .topo-lines {
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.12), transparent 70%),
+                        radial-gradient(ellipse at 85% 85%, rgba(6, 182, 212, 0.08), transparent 60%);
+    }
+    .job-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .job-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* LEAFLET CUSTOM DARK THEME */
+    .leaflet-container {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background-color: #0b1120 !important;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 16px !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7) !important;
+      padding: 2px !important;
+    }
+    .leaflet-popup-tip {
+      background: #0f172a !important;
+    }
+    .leaflet-popup-close-button {
+      color: #94a3b8 !important;
+      padding: 6px 8px !important;
+      font-size: 16px !important;
+    }
+    .leaflet-popup-close-button:hover {
+      color: #ffffff !important;
+    }
+    .leaflet-control-zoom a {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+    }
+    .leaflet-control-zoom a:hover {
+      background: #1e293b !important;
+      color: #10b981 !important;
+    }
+    .leaflet-control-attribution {
+      background: rgba(15, 23, 42, 0.85) !important;
+      color: #94a3b8 !important;
+      font-size: 10px !important;
+      border-top-left-radius: 8px;
+    }
+    .leaflet-control-attribution a {
+      color: #10b981 !important;
+    }
+    .job-map-marker {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .job-map-marker:hover {
+      transform: scale(1.2) translateY(-2px);
+      z-index: 1000 !important;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-brand-emerald selection:text-black flex flex-col justify-between">
+
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute inset-0 bg-grid-pattern opacity-80"></div>
+    <div class="absolute inset-0 topo-lines"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[380px] bg-gradient-to-tr from-brand-emerald/15 via-brand-cyan/15 to-brand-violet/15 blur-[130px] rounded-full"></div>
+  </div>
+
+  <!-- STICKY TOP COORDINATES BAR -->
+  <div class="relative z-30 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md px-4 sm:px-8 py-1.5 text-[11px] font-mono text-slate-400 flex justify-between items-center tracking-wider">
+    <div class="flex items-center space-x-3 truncate">
+      <span class="flex items-center text-brand-emerald">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-ping mr-1.5"></span>
+        GIS JOBS // IT & REMOTE OPPORTUNITIES
+      </span>
+      <span class="hidden md:inline text-slate-700">|</span>
+      <span class="hidden md:inline text-slate-400">POSIZIONI APERTE & BANDI</span>
+    </div>
+    <div class="flex items-center space-x-3 text-brand-emerald shrink-0">
+      <span class="text-slate-400">OFFERTE ATTIVE:</span>
+      <span id="topLiveCounter" class="font-bold text-white">...</span>
+      <i data-lucide="briefcase" class="w-3.5 h-3.5 text-brand-emerald"></i>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVBAR -->
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+    <div class="flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-slate-800 p-1 shadow-lg shadow-brand-violet/20 group-hover:scale-105 group-hover:border-brand-violet/50 transition duration-300">
+          <img src="assets/logo.png" alt="Ardilla Violeta GIS Logo" class="w-full h-full object-contain rounded-xl" />
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-cyan rounded-full border-2 border-[#090d16] animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-white group-hover:text-brand-violet transition">Ardilla Violeta</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">GIS & Geodata Hub Italiano</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 border border-slate-800 rounded-full p-1.5 backdrop-blur-md shadow-lg">
+        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Home
+        </a>
+        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Tool GIS
+        </a>
+        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Open Data
+        </a>
+        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Directory
+        </a>
+        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
+          Formazione
+        </a>
+        <a href="jobs.html" class="px-4 py-1.5 text-xs font-semibold text-white bg-brand-emerald/20 border border-brand-emerald/50 rounded-full shadow-inner text-brand-emerald">
+          Lavoro & Bandi
+        </a>
+      </nav>
+
+      <!-- CTA & Mobile Toggle Button -->
+      <div class="flex items-center gap-2">
+        <a href="#postJob" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-brand-emerald text-xs font-medium text-slate-200 hover:text-white transition shadow-sm">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-brand-emerald"></i>
+          <span>Pubblica Annuncio</span>
+        </a>
+
+        <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition" aria-label="Apri menu">
+          <i data-lucide="menu" id="menuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-3 p-4 rounded-2xl bg-slate-950/95 border border-slate-800 backdrop-blur-xl shadow-2xl flex flex-col gap-2 transition-all">
+      <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="home" class="w-4 h-4"></i> Home
+      </a>
+      <a href="tools.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="wrench" class="w-4 h-4 text-brand-violet"></i> Tool GIS
+      </a>
+      <a href="opendata.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="database" class="w-4 h-4 text-brand-cyan"></i> Open Data
+      </a>
+      <a href="directory.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="users" class="w-4 h-4 text-brand-violet"></i> Directory
+      </a>
+      <a href="learning.html" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white transition flex items-center gap-2">
+        <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-cyan"></i> Formazione
+      </a>
+      <a href="jobs.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/40 flex items-center gap-2">
+        <i data-lucide="briefcase" class="w-4 h-4"></i> Lavoro & Bandi
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow">
+
+    <!-- HERO HEADER -->
+    <div class="text-center max-w-3xl mx-auto space-y-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand-emerald/30 bg-brand-emerald/10 text-brand-emerald text-xs font-mono tracking-wide shadow-md backdrop-blur-md">
+        <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+        <span>Geospatial Career Hub // Italia</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-white">
+        Bacheca Lavoro & <span class="bg-gradient-to-r from-brand-emerald via-teal-300 to-brand-cyan bg-clip-text text-transparent">Opportunità GIS</span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+        Trova posizioni aperte, contratti freelance, collaborazioni B2B e bandi pubblici dedicati al mondo cartografico, geospaziale e telerilevamento.
+      </p>
+
+      <!-- Real-time Search Input -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <div class="relative group">
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-emerald via-brand-cyan to-brand-violet rounded-2xl blur opacity-30 group-focus-within:opacity-75 transition duration-300"></div>
+          <div class="relative flex items-center bg-slate-900/90 border border-slate-700/80 rounded-xl overflow-hidden backdrop-blur-xl shadow-2xl">
+            <div class="pl-4.5 pr-2 text-slate-400 flex items-center justify-center">
+              <i data-lucide="search" class="w-5 h-5 group-focus-within:text-brand-emerald transition"></i>
+            </div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Cerca per ruolo, azienda, città o tecnologia (es. QGIS, Remoto, PostGIS, LiDAR)..." 
+              class="w-full py-3.5 px-3 bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
+              autocomplete="off"
+            />
+            <button id="clearSearchBtn" class="hidden mr-3 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" title="Azzera ricerca">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY FILTER BUTTONS -->
+    <div class="mt-10 mb-8 flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto">
+      <button data-filter="all" class="filter-btn active px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 bg-brand-emerald text-slate-950 font-bold border-brand-emerald shadow-lg shadow-brand-emerald/25 flex items-center gap-1.5">
+        <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+        <span>Tutte le Offerte</span>
+      </button>
+
+      <button data-filter="remoto" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5">
+        <i data-lucide="globe" class="w-3.5 h-3.5 text-brand-cyan"></i>
+        <span>100% Remoto</span>
+      </button>
+
+      <button data-filter="indeterminato" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5">
+        <i data-lucide="building" class="w-3.5 h-3.5 text-brand-violet"></i>
+        <span>Full-Time / Indeterminato</span>
+      </button>
+
+      <button data-filter="freelance" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/80 transition-all duration-200 flex items-center gap-1.5">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-emerald"></i>
+        <span>Freelance & Progetti</span>
+      </button>
+    </div>
+
+    <!-- INTERACTIVE LEAFLET & OPENSTREETMAP SECTION -->
+    <div class="mb-10 max-w-6xl mx-auto">
+      <div class="rounded-2xl bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-slate-800 p-3 sm:p-5 shadow-2xl relative overflow-hidden">
+        
+        <!-- Header Mappa -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-800/80">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald flex items-center justify-center shrink-0">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-white tracking-wide">Mappa Geografica delle Opportunità GIS</h2>
+                <span id="mapCounter" class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-brand-emerald border border-slate-700">0 posizioni</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Visualizzazione interattiva basata su OpenStreetMap & Leaflet.js</p>
+            </div>
+          </div>
+
+          <!-- Pulsanti Utilità Mappa -->
+          <div class="flex items-center gap-2">
+            <button id="recenterMapBtn" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-mono flex items-center gap-1.5 transition border border-slate-700 shadow-sm" title="Centra la visuale sull'Italia">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5 text-brand-emerald"></i>
+              <span>Centra Italia</span>
+            </button>
+            <button id="toggleMapBtn" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-mono flex items-center gap-1.5 transition border border-slate-700 shadow-sm" title="Espandi o comprimi la mappa">
+              <i data-lucide="chevron-up" id="toggleMapIcon" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span id="toggleMapText">Comprimi</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenitore Leaflet -->
+        <div id="mapWrapper" class="transition-all duration-300">
+          <div id="jobsMap" class="h-[360px] sm:h-[430px] w-full rounded-xl overflow-hidden border border-slate-800/90 relative z-10"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STATS COUNTER BAR -->
+    <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-6 px-1 border-b border-slate-800/60 pb-3">
+      <div class="flex items-center gap-2">
+        <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-brand-emerald"></i>
+        <span>Posizioni visualizzate: <strong id="visibleCount" class="text-white font-bold">...</strong></span>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        Filtro: <span id="activeFilterLabel" class="text-brand-emerald font-semibold">Tutte le Offerte</span>
+      </div>
+    </div>
+
+    <!-- JOBS GRID (Generata dal Foglio Google) -->
+    <div id="jobsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+      <div class="col-span-full text-center py-12 text-slate-400 font-mono text-xs flex items-center justify-center gap-2">
+        <svg class="animate-spin h-4 w-4 text-brand-emerald" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Caricamento annunci in tempo reale...
+      </div>
+    </div>
+
+    <!-- ZERO RESULTS FALLBACK -->
+    <div id="noResults" class="hidden my-16 text-center max-w-md mx-auto p-8 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md">
+      <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
+        <i data-lucide="search-x" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-bold text-white mb-1">Nessuna offerta trovata</h3>
+      <p class="text-xs text-slate-400 mb-4">Prova a modificare i criteri di ricerca o azzera i filtri.</p>
+    </div>
+
+    <!-- SECTION: PUBBLICA UN ANNUNCIO (BOTTOM CTA) -->
+    <section id="postJob" class="mt-20 lg:mt-28">
+      <div class="relative p-1 rounded-3xl bg-gradient-to-r from-brand-emerald/40 via-brand-cyan/30 to-brand-violet/40 shadow-2xl">
+        <div class="bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-8 sm:p-12 border border-slate-800">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-8 space-y-3 text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-emerald/30 bg-brand-emerald/10 text-brand-emerald text-xs font-mono">
+                <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                <span>Recruiting & Opportunità</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                La tua azienda o il tuo ente cerca specialisti GIS?
+              </h2>
+              <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
+                Pubblica gratuitamente la tua offerta di lavoro, bando o richiesta di collaborazione per raggiungere direttamente analisti territoriali, cartografi e data scientist geospaziali in Italia.
+              </p>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+              <a 
+                href="mailto:pixie4284@gmail.com?subject=Pubblicazione%20Offerta%20Lavoro%20GIS&body=Nome%20Azienda/Ente:%0ATitolo%20Posizione:%0ALuogo%20(es.%20Torino%20/%20100%25%20Remoto):%0ATipologia%20Contratto%20(Tempo%20Indeterminato/Freelance):%0ADescrizione%20sintetica%20del%20ruolo:%0ASkill%20richieste%20(%23QGIS,%20%23PostGIS,%20ecc):%0ALink%20o%20Email%20per%20la%20candidatura:" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-slate-950 bg-gradient-to-r from-brand-emerald to-teal-300 hover:from-emerald-300 hover:to-teal-200 shadow-lg shadow-brand-emerald/25 active:scale-[0.98] transition duration-200 text-center"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Pubblica Annuncio Gratuito</span>
+              </a>
+              <a 
+                href="directory.html" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-slate-300 bg-slate-900 border border-slate-700 hover:border-slate-600 hover:text-white transition duration-200 text-center"
+              >
+                <i data-lucide="users" class="w-4 h-4 text-brand-violet"></i>
+                <span>Esplora i Profili</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-20 border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-3">
+      <p>&copy; 2026 Ardilla Violeta. Tutti i diritti riservati.</p>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="index.html" class="hover:text-white transition">Home</a>
+        <a href="tools.html" class="hover:text-white transition">Tool GIS</a>
+        <a href="opendata.html" class="hover:text-white transition">Open Data</a>
+        <a href="directory.html" class="hover:text-white transition">Directory</a>
+        <a href="learning.html" class="hover:text-white transition">Formazione</a>
+        <a href="jobs.html" class="hover:text-white transition text-brand-emerald">Lavoro & Bandi</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT: COLLEGAMENTO SCHEDA JOBS + LEAFLET MAP + FILTRI -->
+  <script>
+    // Link CSV pubblico della scheda "Jobs"
+    const JOBS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR2XVI2-Dn3AZXojSPw1ymqkrCYkKSgqywMI075iKZGzC1VYhvONXl1v0k3BTOYiT-jKg7p48HzT5_f/pub?gid=2007010668&single=true&output=csv';
+
+    // Sequenza esatta delle colonne nel database (Indice row[i]):
+    // 0: title, 1: company, 2: location, 3: contract_type, 4: description,
+    // 5: tags, 6: apply_url, 7: date_posted, 8: badge, 9: lat, 10: lon
+    const COLUMN_KEYS = [
+      'title',         // 0
+      'company',       // 1
+      'location',      // 2
+      'contract_type', // 3
+      'description',   // 4
+      'tags',          // 5
+      'apply_url',     // 6
+      'date_posted',   // 7
+      'badge',         // 8
+      'lat',           // 9
+      'lon'            // 10
+    ];
+
+    // Fallback locale strutturato con la sequenza esatta delle colonne
+    const FALLBACK_JOBS = [
+      {
+        title: "Geologo Senior",
+        company: "Aureli Soil srl",
+        location: "Pescina (AQ)",
+        contract_type: "Full Time / In sede",
+        description: "Coordinamento e supervisione di indagini geognostiche, geotecniche e geofisiche, prove in situ (Lugeon, Lefranc, Menard), logging stratigrafico, monitoraggio strumentale e redazione relazioni tecniche.",
+        tags: "#Geologia #Geotecnica #GIS",
+        apply_url: "https://www.linkedin.com/jobs/view/4459193632/",
+        date_posted: "2026-09-08",
+        badge: "Nuovo / In evidenza",
+        lat: "42.0272",
+        lon: "13.6631"
+      },
+      {
+        title: "Geologo/a",
+        company: "Bonifica S.p.A.",
+        location: "Roma (In sede / Sopralluoghi)",
+        contract_type: "Partita IVA",
+        description: "Progettazione infrastrutture di trasporto (strade, ferrovie, gallerie), modellazione geologica/idrogeologica, gestione dati GIS e AutoCAD, interpretazione sondaggi/geofisica e relazioni tecniche.",
+        tags: "#Geologia #BIM #Infrastrutture #GIS #AutoCAD #Geotecnica",
+        apply_url: "https://www.linkedin.com/jobs/view/4463321087/",
+        date_posted: "2026-09-04",
+        badge: "Full Time",
+        lat: "41.8967068",
+        lon: "12.4822025"
+      },
+      {
+        title: "3D Survey & Point Cloud Specialist",
+        company: "Gruppo Nove srl",
+        location: "Rende (Calabria)",
+        contract_type: "Full Time",
+        description: "Gestione, registrazione e pulizia nuvole di punti (Laser Scanner, LiDAR, fotogrammetria), georeferenziazione, restituzione 2D/3D e supporto a processi Scan-to-CAD e Scan-to-BIM.",
+        tags: "#PointCloud #LaserScanner #LiDAR #ScanToBIM #Fotogrammetria #Revit #Topografia #BIM",
+        apply_url: "https://www.linkedin.com/jobs/view/4461665563/",
+        date_posted: "2026-09-03",
+        badge: "Full Time",
+        lat: "39.3317741",
+        lon: "16.1844986"
+      },
+      {
+        title: "Incarico GIS // Modellistica Idrologica & Severità Idrica",
+        company: "Universita’ degli Studi di Salerno",
+        location: "Campania",
+        contract_type: "Consulenza PA",
+        description: "Sviluppo di una procedura in ambiente GIS per la consultazione dello stato di severità idrica alla scala di bacino e l'analisi di indicatori numerici previsionali di breve periodo.",
+        tags: "#GIS #Idrologia #BandoPA #Python #OpenData",
+        apply_url: "https://www.inpa.gov.it/bandi-e-avvisi/dettaglio-bando-avviso/?concorso_id=7ea7ad64cd084ca3ae76e53521934178",
+        date_posted: "2026-08-25",
+        badge: "Concorso Pubblico",
+        lat: "41.1125078",
+        lon: "14.8454619"
+      },
+      {
+        title: "Analista programmatore/programmatrice di sistemi GIS",
+        company: "Semenda srl",
+        location: "Modena, Emilia-Romagna (in sede)",
+        contract_type: "Full-Time",
+        description: "Progettazione e sviluppo di applicazioni GIS in ambiente ESRI.",
+        tags: "#GIS #Agile #JS #AndroidApp #SQL #DB",
+        apply_url: "https://www.linkedin.com/jobs/view/4458738474/",
+        date_posted: "2026-08-26",
+        badge: "Full-Time",
+        lat: "44.647128",
+        lon: "10.9252269"
+      },
+      {
+        title: "Topografo // Rilievo, Laser Scanner & Nuvole di Punti",
+        company: "SPERI Società di Ingegneria",
+        location: "Roma (con attività di campo/cantiere)",
+        contract_type: "Partita IVA",
+        description: "Ricerca di un topografo per rilievi topografici, laser scanner, droni e monitoraggio con restituzione grafica 2D/3D (DWG, nuvole di punti, pratiche catastali Pregeo/Docfa).",
+        tags: "#Topografia #LaserScanner #NuvoleDiPunti #AutoCAD #GNSS #PregeoDocfa",
+        apply_url: "https://www.linkedin.com/jobs/view/4456592940/",
+        date_posted: "2026-08-25",
+        badge: "Full-time",
+        lat: "41.8967068",
+        lon: "12.4822025"
+      },
+      {
+        title: "Environmental & Permitting Specialist // Rinnovabili & GIS",
+        company: "EnviCons (flyRen Energy SpA)",
+        location: "Torino (in sede, con 1gg Smart Working)",
+        contract_type: "Tempo Indeterminato",
+        description: "Gestione iter autorizzativi e studi di impatto (SIA, VIncA, relazioni paesaggistiche) per impianti FER utility-scale (FV, eolico, BESS) con analisi vincoli territoriali tramite GIS/AutoCAD.",
+        tags: "#GIS #AutoCAD #EnergieRinnovabili #Permitting #VIA #VIncA #ValutazioneImpatto",
+        apply_url: "https://it.indeed.com/jobs?q=gis&l=&fromage=3&from=searchOnDesktopSerp&vjk=f5162111e8f4b816",
+        date_posted: "2026-08-24",
+        badge: "Full-Time",
+        lat: "45.0703155",
+        lon: "7.6868552"
+      }
+    ];
+
+    lucide.createIcons();
+
+    // Menu Mobile
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.toggle('hidden');
+        if (menuIcon) {
+          menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    const jobsGrid = document.getElementById('jobsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const visibleCountEl = document.getElementById('visibleCount');
+    const topLiveCounterEl = document.getElementById('topLiveCounter');
+    const mapCounterEl = document.getElementById('mapCounter');
+    const activeFilterLabel = document.getElementById('activeFilterLabel');
+    const noResults = document.getElementById('noResults');
+    const recenterMapBtn = document.getElementById('recenterMapBtn');
+    const toggleMapBtn = document.getElementById('toggleMapBtn');
+    const mapWrapper = document.getElementById('mapWrapper');
+    const toggleMapIcon = document.getElementById('toggleMapIcon');
+    const toggleMapText = document.getElementById('toggleMapText');
+
+    let allJobs = [];
+    let currentFilter = 'all';
+    let currentSearchTerm = '';
+    let isMapCollapsed = false;
+
+    // Variabili Leaflet Map
+    let jobsMap = null;
+    let markersLayer = null;
+    let jobMarkersMap = new Map();
+
+    // Inizializzazione Mappa Leaflet & OpenStreetMap
+    function initLeafletMap() {
+      if (jobsMap) return;
+
+      jobsMap = L.map('jobsMap', {
+        center: [42.1, 12.8],
+        zoom: 6,
+        minZoom: 4,
+        maxZoom: 18,
+        scrollWheelZoom: false
+      });
+
+      jobsMap.on('focus', () => { jobsMap.scrollWheelZoom.enable(); });
+      jobsMap.on('blur', () => { jobsMap.scrollWheelZoom.disable(); });
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+      }).addTo(jobsMap);
+
+      markersLayer = L.featureGroup().addTo(jobsMap);
+    }
+
+    // Creazione Icona Personalizzata Marker Leaflet
+    function createCustomMarkerIcon() {
+      return L.divIcon({
+        className: 'job-map-marker',
+        html: `
+          <div class="relative flex items-center justify-center -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+            <span class="absolute w-8 h-8 rounded-full bg-emerald-400/30 animate-ping"></span>
+            <div class="w-8 h-8 rounded-full bg-slate-950 border-2 border-emerald-400 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-950/80">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="12" x="3" y="8" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              </svg>
+            </div>
+          </div>
+        `,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -18]
+      });
+    }
+
+    // Parser Tags Avanzato (gestisce virgole, punti e virgola, spazi singoli/multipli e cancelletti #)
+    function parseTags(rawTags) {
+      if (!rawTags) return [];
+      const str = String(rawTags).trim();
+      if (!str) return [];
+
+      // Divide sia per virgole che per spazi multipli o punti e virgola
+      const rawTokens = str.split(/[\s,;]+/);
+      const cleanedTags = [];
+      const seen = new Set();
+
+      rawTokens.forEach(token => {
+        // Pulisce il token rimuovendo cancelletto iniziale e caratteri di punteggiatura residui
+        let clean = token.replace(/^#+/, '').replace(/^[,.;:_\-]+|[,.;:_\-]+$/g, '').trim();
+        if (clean.length > 0) {
+          const lower = clean.toLowerCase();
+          if (!seen.has(lower)) {
+            seen.add(lower);
+            cleanedTags.push('#' + clean);
+          }
+        }
+      });
+
+      return cleanedTags;
+    }
+
+    // Parser riga CSV (RFC 4180) che rispetta le virgolette con virgole all'interno
+    function splitCSVRow(row, isTab) {
+      if (isTab) {
+        return row.split('\t').map(v => v.trim());
+      }
+      
+      const values = [];
+      let current = '';
+      let insideQuotes = false;
+      
+      for (let i = 0; i < row.length; i++) {
+        const char = row[i];
+        const nextChar = row[i + 1];
+        
+        if (char === '"') {
+          if (insideQuotes && nextChar === '"') {
+            current += '"';
+            i++; // salta virgoletta di escape
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (char === ',' && !insideQuotes) {
+          values.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      values.push(current.trim());
+      
+      return values.map(val => {
+        if (val.startsWith('"') && val.endsWith('"') && val.length >= 2) {
+          val = val.substring(1, val.length - 1).replace(/""/g, '"');
+        }
+        return val.trim();
+      });
+    }
+
+    // Parser CSV che associa rigorosamente gli indici 0..10 o le intestazioni
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length === 0) return [];
+
+      const isTab = lines[0].includes('\t');
+      const firstRowValues = splitCSVRow(lines[0], isTab);
+      
+      // Verifica se la prima riga è una riga di intestazione
+      const isHeader = firstRowValues.some(v => ['title', 'titolo', 'company', 'azienda', 'lat', 'tags', 'contract_type'].includes(v.toLowerCase()));
+      const startIndex = isHeader ? 1 : 0;
+      const headers = isHeader ? firstRowValues.map(h => h.toLowerCase().trim()) : COLUMN_KEYS;
+
+      const result = [];
+
+      for (let i = startIndex; i < lines.length; i++) {
+        const row = lines[i].trim();
+        if (!row) continue;
+
+        const values = splitCSVRow(row, isTab);
+        if (values.length === 0 || values.every(v => v === '')) continue;
+
+        // Mappatura per indice esatto:
+        // 0: title, 1: company, 2: location, 3: contract_type, 4: description,
+        // 5: tags, 6: apply_url, 7: date_posted, 8: badge, 9: lat, 10: lon
+        const entry = {
+          title: values[0] || '',
+          company: values[1] || '',
+          location: values[2] || '',
+          contract_type: values[3] || '',
+          description: values[4] || '',
+          tags: values[5] || '',
+          apply_url: values[6] || '',
+          date_posted: values[7] || '',
+          badge: values[8] || '',
+          lat: values[9] || '',
+          lon: values[10] || ''
+        };
+
+        // Sovrascrive/arricchisce se il file ha intestazioni denominate
+        if (isHeader) {
+          headers.forEach((h, colIdx) => {
+            if (values[colIdx] !== undefined && values[colIdx] !== '') {
+              entry[h] = values[colIdx];
+            }
+          });
+        }
+
+        result.push(entry);
+      }
+      return result;
+    }
+
+    // Rendering Card Singola Offerta
+    function renderJobCard(j, index) {
+      const title = j.title || j.titolo || 'Posizione GIS';
+      const company = j.company || j.azienda || 'Azienda';
+      const location = j.location || j.luogo || 'Remoto / Ibrido';
+      const contract = j.contract_type || j.contratto || 'Full-Time';
+      const desc = j.description || j.descrizione || '';
+      const tags = j.tags || '';
+      const applyUrl = j.apply_url || j.url || 'mailto:pixie4284@gmail.com';
+      const badge = j.badge || 'Nuovo Annuncio';
+      const datePosted = j.date_posted || j.data || 'Recente';
+
+      // Parsing coordinate (gestione virgola/punto decimale)
+      const rawLat = j.lat !== undefined ? j.lat : (j.latitude || '');
+      const rawLon = j.lon !== undefined ? j.lon : (j.longitude || j.lng || '');
+      const lat = parseFloat(String(rawLat).trim().replace(',', '.'));
+      const lon = parseFloat(String(rawLon).trim().replace(',', '.'));
+      const hasCoords = !isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+
+      // Generazione tag con gestione avanzata di virgole e spazi
+      const tagsArray = parseTags(tags);
+      const tagsList = tagsArray
+        .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/80">${t}</span>`)
+        .join('');
+
+      return `
+        <div class="job-card group rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 flex flex-col justify-between hover:border-brand-emerald/60 hover:shadow-xl hover:shadow-brand-emerald/10"
+             data-job-id="${index}"
+             data-category="${(contract + ' ' + location).toLowerCase()}"
+             data-keywords="${(title + ' ' + company + ' ' + desc + ' ' + location + ' ' + tagsArray.join(' ') + ' ' + contract).toLowerCase()}">
+          <div>
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30">${badge}</span>
+                <h3 class="text-base font-bold text-white group-hover:text-brand-emerald transition mt-2 leading-tight">${title}</h3>
+                <p class="text-xs text-slate-300 font-semibold mt-0.5">${company}</p>
+              </div>
+              <span class="text-[10px] font-mono text-slate-500 shrink-0">${datePosted}</span>
+            </div>
+            
+            <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400 mb-4">
+              <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-emerald"></i> ${location}</span>
+              <span>•</span>
+              <span class="text-slate-300">${contract}</span>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-5">${desc}</p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">${tagsList}</div>
+            <div class="flex items-center gap-2">
+              <a href="${applyUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-800 hover:bg-brand-emerald text-slate-200 hover:text-slate-950 text-xs font-bold transition shadow-sm">
+                <span>Candidati</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </a>
+              ${hasCoords ? `
+                <button type="button" onclick="zoomToJobOnMap(${index})" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-brand-emerald/20 border border-slate-700 hover:border-brand-emerald text-brand-emerald transition" title="Mostra e centra sulla mappa">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Aggiornamento Marker sulla Mappa Leaflet in base alle offerte visibili
+    function updateMapMarkers(visibleJobsList) {
+      if (!jobsMap || !markersLayer) return;
+
+      markersLayer.clearLayers();
+      jobMarkersMap.clear();
+
+      let geocodedCount = 0;
+      const coordCounts = {};
+
+      visibleJobsList.forEach((j) => {
+        const rawLat = j.lat !== undefined ? j.lat : (j.latitude || '');
+        const rawLon = j.lon !== undefined ? j.lon : (j.longitude || j.lng || '');
+        let lat = parseFloat(String(rawLat).trim().replace(',', '.'));
+        let lon = parseFloat(String(rawLon).trim().replace(',', '.'));
+
+        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+          geocodedCount++;
+
+          // Dispersione leggera se ci sono coordinate identiche (es. multiple posizioni su Roma)
+          const coordKey = `${lat.toFixed(4)}_${lon.toFixed(4)}`;
+          if (coordCounts[coordKey]) {
+            const count = coordCounts[coordKey];
+            const angle = count * 1.35;
+            lat += Math.sin(angle) * 0.007;
+            lon += Math.cos(angle) * 0.007;
+            coordCounts[coordKey]++;
+          } else {
+            coordCounts[coordKey] = 1;
+          }
+
+          const title = j.title || j.titolo || 'Posizione GIS';
+          const company = j.company || j.azienda || 'Azienda';
+          const location = j.location || j.luogo || 'Sede';
+          const contract = j.contract_type || j.contratto || 'Full-Time';
+          const badge = j.badge || 'Offerta';
+          const datePosted = j.date_posted || j.data || 'Recente';
+          const applyUrl = j.apply_url || j.url || 'mailto:pixie4284@gmail.com';
+
+          const marker = L.marker([lat, lon], {
+            icon: createCustomMarkerIcon()
+          });
+
+          // Popup HTML interattivo
+          const popupHtml = `
+            <div class="p-2 min-w-[220px] max-w-[270px]">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 uppercase">${badge}</span>
+                <span class="text-[10px] font-mono text-slate-400">${datePosted}</span>
+              </div>
+              <h4 class="text-sm font-bold text-white leading-tight mb-0.5">${title}</h4>
+              <p class="text-xs font-semibold text-emerald-400 mb-2">${company}</p>
+              <div class="flex items-center gap-1.5 text-[11px] text-slate-300 mb-3 font-mono">
+                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="truncate">${location} (${contract})</span>
+              </div>
+              <a href="${applyUrl}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shadow">
+                <span>Candidati</span>
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
+            </div>
+          `;
+
+          marker.bindPopup(popupHtml);
+          markersLayer.addLayer(marker);
+
+          if (j._origIndex !== undefined) {
+            jobMarkersMap.set(j._origIndex, marker);
+          }
+        }
+      });
+
+      if (mapCounterEl) {
+        mapCounterEl.textContent = `${geocodedCount} sulla mappa`;
+      }
+    }
+
+    // Funzione globale per centrare e aprire il popup di un job dalla card
+    window.zoomToJobOnMap = function(index) {
+      if (!jobsMap || !jobMarkersMap.has(index)) return;
+      
+      if (isMapCollapsed) {
+        toggleMapBtn.click();
+      }
+
+      const marker = jobMarkersMap.get(index);
+      const latlng = marker.getLatLng();
+
+      document.getElementById('jobsMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      setTimeout(() => {
+        jobsMap.setView(latlng, 12, { animate: true });
+        marker.openPopup();
+      }, 250);
+    };
+
+    // Filtri dinamici (Card + Mappa)
+    function filterJobs() {
+      const cards = document.querySelectorAll('.job-card');
+      let visibleCount = 0;
+      const visibleJobs = [];
+
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category') || '';
+        const keywords = card.getAttribute('data-keywords') || '';
+        const jobId = parseInt(card.getAttribute('data-job-id'), 10);
+
+        const matchesCategory = (currentFilter === 'all' || category.includes(currentFilter));
+        const matchesSearch = currentSearchTerm === '' || keywords.includes(currentSearchTerm);
+
+        if (matchesCategory && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+          if (allJobs[jobId]) {
+            visibleJobs.push(allJobs[jobId]);
+          }
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      visibleCountEl.textContent = visibleCount;
+      if (topLiveCounterEl) topLiveCounterEl.textContent = visibleCount;
+      noResults.classList.toggle('hidden', visibleCount > 0);
+
+      // Aggiorna marker visibili sulla mappa
+      updateMapMarkers(visibleJobs);
+    }
+
+    // Caricamento Dati dal Foglio Google
+    async function loadJobsFromSheet() {
+      initLeafletMap();
+
+      try {
+        const response = await fetch(JOBS_CSV_URL);
+        if (!response.ok) throw new Error('Network error');
+        const csvText = await response.text();
+        const parsed = parseCSV(csvText);
+
+        if (parsed.length > 0) {
+          allJobs = parsed;
+        } else {
+          allJobs = FALLBACK_JOBS;
+        }
+      } catch (error) {
+        console.warn('Utilizzo catalogo di riserva Jobs:', error);
+        allJobs = FALLBACK_JOBS;
+      }
+
+      allJobs.forEach((job, idx) => {
+        job._origIndex = idx;
+      });
+
+      jobsGrid.innerHTML = allJobs.map((j, idx) => renderJobCard(j, idx)).join('');
+      lucide.createIcons();
+      filterJobs();
+
+      if (markersLayer && markersLayer.getLayers().length > 0) {
+        jobsMap.fitBounds(markersLayer.getBounds(), { padding: [40, 40], maxZoom: 10 });
+      }
+    }
+
+    // Event listener pulsanti filtri
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('active', 'bg-brand-emerald', 'text-slate-950', 'font-bold', 'border-brand-emerald', 'shadow-lg', 'shadow-brand-emerald/25');
+          b.classList.add('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+        });
+
+        btn.classList.add('active', 'bg-brand-emerald', 'text-slate-950', 'font-bold', 'border-brand-emerald', 'shadow-lg', 'shadow-brand-emerald/25');
+        btn.classList.remove('border-slate-800', 'bg-slate-900/70', 'text-slate-300');
+
+        currentFilter = btn.getAttribute('data-filter');
+        const btnText = btn.querySelector('span') ? btn.querySelector('span').innerText : 'Tutte le Offerte';
+        activeFilterLabel.textContent = btnText;
+
+        filterJobs();
+      });
+    });
+
+    // Ricerca real-time
+    searchInput.addEventListener('input', (e) => {
+      currentSearchTerm = e.target.value.trim().toLowerCase();
+      clearSearchBtn.classList.toggle('hidden', currentSearchTerm.length === 0);
+      filterJobs();
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchTerm = '';
+      clearSearchBtn.classList.add('hidden');
+      filterJobs();
+      searchInput.focus();
+    });
+
+    // Pulsante Ricentra Mappa su Italia
+    if (recenterMapBtn) {
+      recenterMapBtn.addEventListener('click', () => {
+        if (!jobsMap) return;
+        if (markersLayer && markersLayer.getLayers().length > 0) {
+          jobsMap.fitBounds(markersLayer.getBounds(), { padding: [40, 40], maxZoom: 10 });
+        } else {
+          jobsMap.setView([42.1, 12.8], 6);
+        }
+      });
+    }
+
+    // Pulsante Comprimi/Espandi Mappa
+    if (toggleMapBtn && mapWrapper) {
+      toggleMapBtn.addEventListener('click', () => {
+        isMapCollapsed = !isMapCollapsed;
+        if (isMapCollapsed) {
+          mapWrapper.classList.add('hidden');
+          toggleMapText.textContent = 'Espandi';
+          toggleMapIcon.setAttribute('data-lucide', 'chevron-down');
+        } else {
+          mapWrapper.classList.remove('hidden');
+          toggleMapText.textContent = 'Comprimi';
+          toggleMapIcon.setAttribute('data-lucide', 'chevron-up');
+          if (jobsMap) {
+            setTimeout(() => { jobsMap.invalidateSize(); }, 200);
+          }
+        }
+        lucide.createIcons();
+      });
+    }
+
+    // Avvio caricamento
+    loadJobsFromSheet();
+  </script>
+</body>
+</html>
