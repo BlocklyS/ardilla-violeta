@@ -23,9 +23,14 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+  <!-- MarkerCluster CSS e JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
@@ -121,12 +126,17 @@
     .leaflet-control-attribution a {
       color: #10b981 !important;
     }
-    .job-map-marker {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Stile Dark/Emerald per MarkerCluster */
+    .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
+      background-color: rgba(16, 185, 129, 0.25) !important;
     }
-    .job-map-marker:hover {
-      transform: scale(1.2) translateY(-2px);
-      z-index: 1000 !important;
+    .marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div {
+      background-color: #0f172a !important;
+      color: #10b981 !important;
+      border: 2px solid #10b981 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-weight: 700 !important;
     }
 
     ::-webkit-scrollbar { width: 8px; }
@@ -166,7 +176,6 @@
   <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
     <div class="flex items-center justify-between">
       
-      <!-- Brand Logo -->
       <a href="index.html" class="flex items-center gap-3 group">
         <div class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-slate-800 p-1 shadow-lg shadow-brand-violet/20 group-hover:scale-105 group-hover:border-brand-violet/50 transition duration-300">
           <img src="assets/logo.png" alt="Ardilla Violeta GIS Logo" class="w-full h-full object-contain rounded-xl" />
@@ -180,29 +189,15 @@
         </div>
       </a>
 
-      <!-- Desktop Navigation Menu -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 border border-slate-800 rounded-full p-1.5 backdrop-blur-md shadow-lg">
-        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
-          Home
-        </a>
-        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
-          Tool GIS
-        </a>
-        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
-          Open Data
-        </a>
-        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
-          Directory
-        </a>
-        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">
-          Formazione
-        </a>
-        <a href="jobs.html" class="px-4 py-1.5 text-xs font-semibold text-white bg-brand-emerald/20 border border-brand-emerald/50 rounded-full shadow-inner text-brand-emerald">
-          Lavoro & Bandi
-        </a>
+        <a href="index.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">Home</a>
+        <a href="tools.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">Tool GIS</a>
+        <a href="opendata.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">Open Data</a>
+        <a href="directory.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">Directory</a>
+        <a href="learning.html" class="px-4 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/70 transition">Formazione</a>
+        <a href="jobs.html" class="px-4 py-1.5 text-xs font-semibold text-white bg-brand-emerald/20 border border-brand-emerald/50 rounded-full shadow-inner text-brand-emerald">Lavoro & Bandi</a>
       </nav>
 
-      <!-- CTA & Mobile Toggle Button -->
       <div class="flex items-center gap-2">
         <a href="#postJob" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-brand-emerald text-xs font-medium text-slate-200 hover:text-white transition shadow-sm">
           <i data-lucide="plus-circle" class="w-4 h-4 text-brand-emerald"></i>
@@ -257,7 +252,6 @@
         Trova posizioni aperte, contratti freelance, collaborazioni B2B e bandi pubblici dedicati al mondo cartografico, geospaziale e telerilevamento.
       </p>
 
-      <!-- Real-time Search Input -->
       <div class="pt-2 max-w-2xl mx-auto">
         <div class="relative group">
           <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-emerald via-brand-cyan to-brand-violet rounded-2xl blur opacity-30 group-focus-within:opacity-75 transition duration-300"></div>
@@ -303,11 +297,10 @@
       </button>
     </div>
 
-    <!-- INTERACTIVE LEAFLET & OPENSTREETMAP SECTION -->
+    <!-- INTERACTIVE MAP SECTION -->
     <div class="mb-10 max-w-6xl mx-auto">
       <div class="rounded-2xl bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-slate-800 p-3 sm:p-5 shadow-2xl relative overflow-hidden">
         
-        <!-- Header Mappa -->
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-800/80">
           <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-xl bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald flex items-center justify-center shrink-0">
@@ -322,7 +315,6 @@
             </div>
           </div>
 
-          <!-- Pulsanti Utilità Mappa -->
           <div class="flex items-center gap-2">
             <button id="recenterMapBtn" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-mono flex items-center gap-1.5 transition border border-slate-700 shadow-sm" title="Centra la visuale sull'Italia">
               <i data-lucide="crosshair" class="w-3.5 h-3.5 text-brand-emerald"></i>
@@ -335,7 +327,6 @@
           </div>
         </div>
 
-        <!-- Contenitore Leaflet -->
         <div id="mapWrapper" class="transition-all duration-300">
           <div id="jobsMap" class="h-[360px] sm:h-[430px] w-full rounded-xl overflow-hidden border border-slate-800/90 relative z-10"></div>
         </div>
@@ -354,7 +345,7 @@
       </div>
     </div>
 
-    <!-- JOBS GRID (Generata dal Foglio Google) -->
+    <!-- JOBS GRID -->
     <div id="jobsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
       <div class="col-span-full text-center py-12 text-slate-400 font-mono text-xs flex items-center justify-center gap-2">
         <svg class="animate-spin h-4 w-4 text-brand-emerald" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -374,7 +365,7 @@
       <p class="text-xs text-slate-400 mb-4">Prova a modificare i criteri di ricerca o azzera i filtri.</p>
     </div>
 
-    <!-- SECTION: PUBBLICA UN ANNUNCIO  (BOTTOM CTA) -->
+    <!-- SECTION: PUBBLICA UN ANNUNCIO -->
     <section id="postJob" class="mt-20 lg:mt-28">
       <div class="relative p-1 rounded-3xl bg-gradient-to-r from-brand-emerald/40 via-brand-cyan/30 to-brand-violet/40 shadow-2xl">
         <div class="bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-8 sm:p-12 border border-slate-800">
@@ -432,36 +423,22 @@
     </div>
   </footer>
 
-  <!-- JAVASCRIPT: COLLEGAMENTO SCHEDA JOBS + LEAFLET MAP + FILTRI -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // Link CSV pubblico della scheda "Jobs"
     const JOBS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR2XVI2-Dn3AZXojSPw1ymqkrCYkKSgqywMI075iKZGzC1VYhvONXl1v0k3BTOYiT-jKg7p48HzT5_f/pub?gid=2007010668&single=true&output=csv';
 
-    // Sequenza esatta delle colonne nel database (Indice row[i]):
-    // 0: title, 1: company, 2: location, 3: contract_type, 4: description,
-    // 5: tags, 6: apply_url, 7: date_posted, 8: badge, 9: lat, 10: lon
     const COLUMN_KEYS = [
-      'title',         // 0
-      'company',       // 1
-      'location',      // 2
-      'contract_type', // 3
-      'description',   // 4
-      'tags',          // 5
-      'apply_url',     // 6
-      'date_posted',   // 7
-      'badge',         // 8
-      'lat',           // 9
-      'lon'            // 10
+      'title', 'company', 'location', 'contract_type', 'description',
+      'tags', 'apply_url', 'date_posted', 'badge', 'lat', 'lon'
     ];
 
-    // Fallback locale strutturato con la sequenza esatta delle colonne
     const FALLBACK_JOBS = [
       {
         title: "Geologo Senior",
         company: "Aureli Soil srl",
         location: "Pescina (AQ)",
         contract_type: "Full Time / In sede",
-        description: "Coordinamento e supervisione di indagini geognostiche, geotecniche e geofisiche, prove in situ (Lugeon, Lefranc, Menard), logging stratigrafico, monitoraggio strumentale e redazione relazioni tecniche.",
+        description: "Coordinamento e supervisione di indagini geognostiche, geotecniche e geofisiche, logging stratigrafico e relazioni tecniche.",
         tags: "#Geologia #Geotecnica #GIS",
         apply_url: "https://www.linkedin.com/jobs/view/4459193632/",
         date_posted: "2026-09-08",
@@ -474,7 +451,7 @@
         company: "Bonifica S.p.A.",
         location: "Roma (In sede / Sopralluoghi)",
         contract_type: "Partita IVA",
-        description: "Progettazione infrastrutture di trasporto (strade, ferrovie, gallerie), modellazione geologica/idrogeologica, gestione dati GIS e AutoCAD, interpretazione sondaggi/geofisica e relazioni tecniche.",
+        description: "Progettazione infrastrutture di trasporto, modellazione geologica/idrogeologica e gestione dati GIS e AutoCAD.",
         tags: "#Geologia #BIM #Infrastrutture #GIS #AutoCAD #Geotecnica",
         apply_url: "https://www.linkedin.com/jobs/view/4463321087/",
         date_posted: "2026-09-04",
@@ -483,51 +460,12 @@
         lon: "12.4822025"
       },
       {
-        title: "3D Survey & Point Cloud Specialist",
-        company: "Gruppo Nove srl",
-        location: "Rende (Calabria)",
-        contract_type: "Full Time",
-        description: "Gestione, registrazione e pulizia nuvole di punti (Laser Scanner, LiDAR, fotogrammetria), georeferenziazione, restituzione 2D/3D e supporto a processi Scan-to-CAD e Scan-to-BIM.",
-        tags: "#PointCloud #LaserScanner #LiDAR #ScanToBIM #Fotogrammetria #Revit #Topografia #BIM",
-        apply_url: "https://www.linkedin.com/jobs/view/4461665563/",
-        date_posted: "2026-09-03",
-        badge: "Full Time",
-        lat: "39.3317741",
-        lon: "16.1844986"
-      },
-      {
-        title: "Incarico GIS // Modellistica Idrologica & Severità Idrica",
-        company: "Universita’ degli Studi di Salerno",
-        location: "Campania",
-        contract_type: "Consulenza PA",
-        description: "Sviluppo di una procedura in ambiente GIS per la consultazione dello stato di severità idrica alla scala di bacino e l'analisi di indicatori numerici previsionali di breve periodo.",
-        tags: "#GIS #Idrologia #BandoPA #Python #OpenData",
-        apply_url: "https://www.inpa.gov.it/bandi-e-avvisi/dettaglio-bando-avviso/?concorso_id=7ea7ad64cd084ca3ae76e53521934178",
-        date_posted: "2026-08-25",
-        badge: "Concorso Pubblico",
-        lat: "41.1125078",
-        lon: "14.8454619"
-      },
-      {
-        title: "Analista programmatore/programmatrice di sistemi GIS",
-        company: "Semenda srl",
-        location: "Modena, Emilia-Romagna (in sede)",
-        contract_type: "Full-Time",
-        description: "Progettazione e sviluppo di applicazioni GIS in ambiente ESRI.",
-        tags: "#GIS #Agile #JS #AndroidApp #SQL #DB",
-        apply_url: "https://www.linkedin.com/jobs/view/4458738474/",
-        date_posted: "2026-08-26",
-        badge: "Full-Time",
-        lat: "44.647128",
-        lon: "10.9252269"
-      },
-      {
         title: "Topografo // Rilievo, Laser Scanner & Nuvole di Punti",
         company: "SPERI Società di Ingegneria",
         location: "Roma (con attività di campo/cantiere)",
         contract_type: "Partita IVA",
-        description: "Ricerca di un topografo per rilievi topografici, laser scanner, droni e monitoraggio con restituzione grafica 2D/3D (DWG, nuvole di punti, pratiche catastali Pregeo/Docfa).",
-        tags: "#Topografia #LaserScanner #NuvoleDiPunti #AutoCAD #GNSS #PregeoDocfa",
+        description: "Rilievi topografici, laser scanner, droni e monitoraggio con restituzione grafica 2D/3D.",
+        tags: "#Topografia #LaserScanner #NuvoleDiPunti #AutoCAD #GNSS",
         apply_url: "https://www.linkedin.com/jobs/view/4456592940/",
         date_posted: "2026-08-25",
         badge: "Full-time",
@@ -539,8 +477,8 @@
         company: "EnviCons (flyRen Energy SpA)",
         location: "Torino (in sede, con 1gg Smart Working)",
         contract_type: "Tempo Indeterminato",
-        description: "Gestione iter autorizzativi e studi di impatto (SIA, VIncA, relazioni paesaggistiche) per impianti FER utility-scale (FV, eolico, BESS) con analisi vincoli territoriali tramite GIS/AutoCAD.",
-        tags: "#GIS #AutoCAD #EnergieRinnovabili #Permitting #VIA #VIncA #ValutazioneImpatto",
+        description: "Gestione iter autorizzativi e studi di impatto (SIA, VIncA) per impianti FER con analisi vincoli territoriali tramite GIS.",
+        tags: "#GIS #AutoCAD #EnergieRinnovabili #Permitting #VIA #VIncA",
         apply_url: "https://it.indeed.com/jobs?q=gis&l=&fromage=3&from=searchOnDesktopSerp&vjk=f5162111e8f4b816",
         date_posted: "2026-08-24",
         badge: "Full-Time",
@@ -586,12 +524,11 @@
     let currentSearchTerm = '';
     let isMapCollapsed = false;
 
-    // Variabili Leaflet Map
     let jobsMap = null;
     let markersLayer = null;
     let jobMarkersMap = new Map();
 
-    // Inizializzazione Mappa Leaflet & OpenStreetMap
+    // Inizializzazione Mappa con Leaflet.markercluster
     function initLeafletMap() {
       if (jobsMap) return;
 
@@ -611,42 +548,45 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
       }).addTo(jobsMap);
 
-      markersLayer = L.featureGroup().addTo(jobsMap);
+      markersLayer = L.markerClusterGroup({
+        maxClusterRadius: 35,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        spiderfyDistanceMultiplier: 1.5
+      });
+      jobsMap.addLayer(markersLayer);
     }
 
-    // Creazione Icona Personalizzata Marker Leaflet
+    // Icona personalizzata pulita e compatibile con lo spiderfy
     function createCustomMarkerIcon() {
       return L.divIcon({
-        className: 'job-map-marker',
+        className: 'job-custom-pin',
         html: `
-          <div class="relative flex items-center justify-center -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
-            <span class="absolute w-8 h-8 rounded-full bg-emerald-400/30 animate-ping"></span>
-            <div class="w-8 h-8 rounded-full bg-slate-950 border-2 border-emerald-400 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-950/80">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div style="width:30px; height:30px; display:flex; align-items:center; justify-center; cursor:pointer;">
+            <div style="width:28px; height:28px; border-radius:50%; background:#0f172a; border:2px solid #10b981; color:#10b981; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.7);">
+              <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="18" height="12" x="3" y="8" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
               </svg>
             </div>
           </div>
         `,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -18]
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -16]
       });
     }
 
-    // Parser Tags Avanzato (gestisce virgole, punti e virgola, spazi singoli/multipli e cancelletti #)
     function parseTags(rawTags) {
       if (!rawTags) return [];
       const str = String(rawTags).trim();
       if (!str) return [];
 
-      // Divide sia per virgole che per spazi multipli o punti e virgola
       const rawTokens = str.split(/[\s,;]+/);
       const cleanedTags = [];
       const seen = new Set();
 
       rawTokens.forEach(token => {
-        // Pulisce il token rimuovendo cancelletto iniziale e caratteri di punteggiatura residui
         let clean = token.replace(/^#+/, '').replace(/^[,.;:_\-]+|[,.;:_\-]+$/g, '').trim();
         if (clean.length > 0) {
           const lower = clean.toLowerCase();
@@ -660,11 +600,8 @@
       return cleanedTags;
     }
 
-    // Parser riga CSV (RFC 4180) che rispetta le virgolette con virgole all'interno
     function splitCSVRow(row, isTab) {
-      if (isTab) {
-        return row.split('\t').map(v => v.trim());
-      }
+      if (isTab) return row.split('\t').map(v => v.trim());
       
       const values = [];
       let current = '';
@@ -677,7 +614,7 @@
         if (char === '"') {
           if (insideQuotes && nextChar === '"') {
             current += '"';
-            i++; // salta virgoletta di escape
+            i++;
           } else {
             insideQuotes = !insideQuotes;
           }
@@ -698,7 +635,6 @@
       });
     }
 
-    // Parser CSV che associa rigorosamente gli indici 0..10 o le intestazioni
     function parseCSV(text) {
       const lines = text.trim().split(/\r?\n/);
       if (lines.length === 0) return [];
@@ -706,7 +642,6 @@
       const isTab = lines[0].includes('\t');
       const firstRowValues = splitCSVRow(lines[0], isTab);
       
-      // Verifica se la prima riga è una riga di intestazione
       const isHeader = firstRowValues.some(v => ['title', 'titolo', 'company', 'azienda', 'lat', 'tags', 'contract_type'].includes(v.toLowerCase()));
       const startIndex = isHeader ? 1 : 0;
       const headers = isHeader ? firstRowValues.map(h => h.toLowerCase().trim()) : COLUMN_KEYS;
@@ -720,9 +655,6 @@
         const values = splitCSVRow(row, isTab);
         if (values.length === 0 || values.every(v => v === '')) continue;
 
-        // Mappatura per indice esatto:
-        // 0: title, 1: company, 2: location, 3: contract_type, 4: description,
-        // 5: tags, 6: apply_url, 7: date_posted, 8: badge, 9: lat, 10: lon
         const entry = {
           title: values[0] || '',
           company: values[1] || '',
@@ -737,7 +669,6 @@
           lon: values[10] || ''
         };
 
-        // Sovrascrive/arricchisce se il file ha intestazioni denominate
         if (isHeader) {
           headers.forEach((h, colIdx) => {
             if (values[colIdx] !== undefined && values[colIdx] !== '') {
@@ -751,7 +682,6 @@
       return result;
     }
 
-    // Rendering Card Singola Offerta
     function renderJobCard(j, index) {
       const title = j.title || j.titolo || 'Posizione GIS';
       const company = j.company || j.azienda || 'Azienda';
@@ -763,14 +693,12 @@
       const badge = j.badge || 'Nuovo Annuncio';
       const datePosted = j.date_posted || j.data || 'Recente';
 
-      // Parsing coordinate (gestione virgola/punto decimale)
       const rawLat = j.lat !== undefined ? j.lat : (j.latitude || '');
       const rawLon = j.lon !== undefined ? j.lon : (j.longitude || j.lng || '');
       const lat = parseFloat(String(rawLat).trim().replace(',', '.'));
       const lon = parseFloat(String(rawLon).trim().replace(',', '.'));
       const hasCoords = !isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
 
-      // Generazione tag con gestione avanzata di virgole e spazi
       const tagsArray = parseTags(tags);
       const tagsList = tagsArray
         .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/80">${t}</span>`)
@@ -818,7 +746,7 @@
       `;
     }
 
-    // Aggiornamento Marker sulla Mappa Leaflet in base alle offerte visibili
+    // Popolamento dei marker nel gruppo MarkerCluster (senza sfalsamenti manuali)
     function updateMapMarkers(visibleJobsList) {
       if (!jobsMap || !markersLayer) return;
 
@@ -826,28 +754,15 @@
       jobMarkersMap.clear();
 
       let geocodedCount = 0;
-      const coordCounts = {};
 
       visibleJobsList.forEach((j) => {
         const rawLat = j.lat !== undefined ? j.lat : (j.latitude || '');
         const rawLon = j.lon !== undefined ? j.lon : (j.longitude || j.lng || '');
-        let lat = parseFloat(String(rawLat).trim().replace(',', '.'));
-        let lon = parseFloat(String(rawLon).trim().replace(',', '.'));
+        const lat = parseFloat(String(rawLat).trim().replace(',', '.'));
+        const lon = parseFloat(String(rawLon).trim().replace(',', '.'));
 
         if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
           geocodedCount++;
-
-          // Dispersione leggera se ci sono coordinate identiche (es. multiple posizioni su Roma)
-          const coordKey = `${lat.toFixed(4)}_${lon.toFixed(4)}`;
-          if (coordCounts[coordKey]) {
-            const count = coordCounts[coordKey];
-            const angle = count * 1.35;
-            lat += Math.sin(angle) * 0.007;
-            lon += Math.cos(angle) * 0.007;
-            coordCounts[coordKey]++;
-          } else {
-            coordCounts[coordKey] = 1;
-          }
 
           const title = j.title || j.titolo || 'Posizione GIS';
           const company = j.company || j.azienda || 'Azienda';
@@ -861,7 +776,6 @@
             icon: createCustomMarkerIcon()
           });
 
-          // Popup HTML interattivo
           const popupHtml = `
             <div class="p-2 min-w-[220px] max-w-[270px]">
               <div class="flex items-center justify-between gap-2 mb-1.5">
@@ -895,7 +809,7 @@
       }
     }
 
-    // Funzione globale per centrare e aprire il popup di un job dalla card
+    // Zoom intelligente: apre automaticamente i cluster se il marker è raggruppato
     window.zoomToJobOnMap = function(index) {
       if (!jobsMap || !jobMarkersMap.has(index)) return;
       
@@ -904,17 +818,16 @@
       }
 
       const marker = jobMarkersMap.get(index);
-      const latlng = marker.getLatLng();
 
       document.getElementById('jobsMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       setTimeout(() => {
-        jobsMap.setView(latlng, 12, { animate: true });
-        marker.openPopup();
+        markersLayer.zoomToShowLayer(marker, () => {
+          marker.openPopup();
+        });
       }, 250);
     };
 
-    // Filtri dinamici (Card + Mappa)
     function filterJobs() {
       const cards = document.querySelectorAll('.job-card');
       let visibleCount = 0;
@@ -943,11 +856,9 @@
       if (topLiveCounterEl) topLiveCounterEl.textContent = visibleCount;
       noResults.classList.toggle('hidden', visibleCount > 0);
 
-      // Aggiorna marker visibili sulla mappa
       updateMapMarkers(visibleJobs);
     }
 
-    // Caricamento Dati dal Foglio Google
     async function loadJobsFromSheet() {
       initLeafletMap();
 
@@ -980,7 +891,6 @@
       }
     }
 
-    // Event listener pulsanti filtri
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         filterBtns.forEach(b => {
@@ -999,7 +909,6 @@
       });
     });
 
-    // Ricerca real-time
     searchInput.addEventListener('input', (e) => {
       currentSearchTerm = e.target.value.trim().toLowerCase();
       clearSearchBtn.classList.toggle('hidden', currentSearchTerm.length === 0);
@@ -1014,7 +923,6 @@
       searchInput.focus();
     });
 
-    // Pulsante Ricentra Mappa su Italia
     if (recenterMapBtn) {
       recenterMapBtn.addEventListener('click', () => {
         if (!jobsMap) return;
@@ -1026,7 +934,6 @@
       });
     }
 
-    // Pulsante Comprimi/Espandi Mappa
     if (toggleMapBtn && mapWrapper) {
       toggleMapBtn.addEventListener('click', () => {
         isMapCollapsed = !isMapCollapsed;
@@ -1046,7 +953,6 @@
       });
     }
 
-    // Avvio caricamento
     loadJobsFromSheet();
   </script>
 </body>
