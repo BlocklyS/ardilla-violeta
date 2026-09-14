@@ -386,7 +386,7 @@
 
             <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
               <a 
-                href="mailto:ardillavioleta@protonmail.com?subject=Pubblicazione%20Offerta%20Lavoro%20GIS&body=Nome%20Azienda/Ente:%0ATitolo%20Posizione:%0ALuogo%20(es.%20Torino%20/%20100%25%20Remoto):%0ATipologia%20Contratto%20(Tempo%20Indeterminato/Freelance):%0ADescrizione%20sintetica%20del%20ruolo:%0ASkill%20richieste%20(%23QGIS,%20%23PostGIS,%20ecc):%0ALink%20o%20Email%20per%20la%20candidatura:" 
+                href="mailto:ardillavioleta@proton.me?subject=Pubblicazione%20Offerta%20Lavoro%20GIS&body=Nome%20Azienda/Ente:%0ATitolo%20Posizione:%0ALuogo%20(es.%20Torino%20/%20100%25%20Remoto):%0ATipologia%20Contratto%20(Tempo%20Indeterminato/Freelance):%0ADescrizione%20sintetica%20del%20ruolo:%0ASkill%20richieste%20(%23QGIS,%20%23PostGIS,%20ecc):%0ALink%20o%20Email%20per%20la%20candidatura:" 
                 class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-slate-950 bg-gradient-to-r from-brand-emerald to-teal-300 hover:from-emerald-300 hover:to-teal-200 shadow-lg shadow-brand-emerald/25 active:scale-[0.98] transition duration-200 text-center"
               >
                 <i data-lucide="send" class="w-4 h-4"></i>
@@ -689,7 +689,7 @@
       const contract = j.contract_type || j.contratto || 'Full-Time';
       const desc = j.description || j.descrizione || '';
       const tags = j.tags || '';
-      const applyUrl = j.apply_url || j.url || 'mailto:ardillavioleta@protonmail.com';
+      const applyUrl = j.apply_url || j.url || 'mailto:ardillavioleta@proton.me';
       const badge = j.badge || 'Nuovo Annuncio';
       const datePosted = j.date_posted || j.data || 'Recente';
 
@@ -770,7 +770,7 @@
           const contract = j.contract_type || j.contratto || 'Full-Time';
           const badge = j.badge || 'Offerta';
           const datePosted = j.date_posted || j.data || 'Recente';
-          const applyUrl = j.apply_url || j.url || 'mailto:ardillavioleta@protonmail.com';
+          const applyUrl = j.apply_url || j.url || 'mailto:ardillavioleta@proton.me';
 
           const marker = L.marker([lat, lon], {
             icon: createCustomMarkerIcon()
