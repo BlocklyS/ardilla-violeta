@@ -654,7 +654,9 @@
     // Caricamento dati
     async function loadDirectoryFromSheet() {
       try {
-        const response = await fetch(DIRECTORY_CSV_URL);
+      const response = await fetch(`${DIRECTORY_CSV_URL}&_t=${Date.now()}`, {
+  cache: 'no-store'
+});
         const csvText = await response.text();
         allProfiles = parseCSV(csvText);
 
