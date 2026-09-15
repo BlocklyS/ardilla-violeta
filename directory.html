@@ -412,36 +412,104 @@
     let currentFilter = 'all';
     let currentSearchTerm = '';
 
-    // Parser CSV
-    function parseCSV(text) {
-      const lines = text.trim().split(/\r?\n/);
-      if (lines.length < 2) return [];
+    // Utility per sanitizzazione testo HTML
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
-      const isTab = lines[0].includes('\t');
-      const headers = isTab 
-        ? lines[0].split('\t').map(h => h.trim().toLowerCase()) 
-        : lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+    // Parser CSV conforme a RFC 4180 per gestire campi multiriga (\n in Bio), virgolette doppie ed escape
+    function parseCSV(text) {
+      if (!text || !text.trim()) return [];
+
+      const firstLineSample = text.slice(0, 500);
+      const delimiter = (firstLineSample.indexOf('\t') !== -1 && !firstLineSample.includes(',')) ? '\t' : ',';
+
+      const rows = [];
+      let currentRow = [];
+      let currentField = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (inQuotes) {
+          if (char === '"') {
+            if (nextChar === '"') {
+              // Virgolette doppie di escape ("" -> ")
+              currentField += '"';
+              i++;
+            } else {
+              // Chiusura campo quotato
+              inQuotes = false;
+            }
+          } else if (char === '\r') {
+            if (nextChar === '\n') {
+              i++;
+            }
+            currentField += '\n';
+          } else {
+            currentField += char;
+          }
+        } else {
+          if (char === '"') {
+            if (!currentField.trim()) {
+              currentField = '';
+            }
+            inQuotes = true;
+          } else if (char === delimiter) {
+            currentRow.push(currentField.trim());
+            currentField = '';
+          } else if (char === '\r' || char === '\n') {
+            if (char === '\r' && nextChar === '\n') {
+              i++;
+            }
+            currentRow.push(currentField.trim());
+            currentField = '';
+            if (currentRow.some(val => val !== '')) {
+              rows.push(currentRow);
+            }
+            currentRow = [];
+          } else {
+            currentField += char;
+          }
+        }
+      }
+
+      if (currentField !== '' || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.some(val => val !== '')) {
+          rows.push(currentRow);
+        }
+      }
+
+      if (rows.length < 2) return [];
+
+      // Estrazione intestazioni (normalizzate in minuscolo e pulite da virgolette)
+      const headers = rows[0].map(h => h.toLowerCase().trim().replace(/^"|"$/g, ''));
 
       const result = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const row = lines[i].trim();
-        if (!row) continue;
-
-        let values = [];
-        if (isTab) {
-          values = row.split('\t');
-        } else {
-          values = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || row.split(',');
-        }
-
+      for (let r = 1; r < rows.length; r++) {
+        const row = rows[r];
         const entry = {};
-        headers.forEach((h, index) => {
-          let val = values[index] ? values[index].trim() : '';
-          if (val.startsWith('"') && val.endsWith('"')) {
-            val = val.substring(1, val.length - 1).replace(/""/g, '"');
+        headers.forEach((header, index) => {
+          let val = row[index] !== undefined ? row[index] : '';
+          if (val.startsWith('"') && val.endsWith('"') && val.length >= 2) {
+            val = val.slice(1, -1).replace(/""/g, '"');
           }
-          entry[h] = val;
+          entry[header] = val;
+
+          // Alias per chiavi pulite (es: 'e-mail' -> 'email', 'linkedin_url' -> 'linkedinurl')
+          const cleanKey = header.replace(/[-_\s]/g, '');
+          if (cleanKey && !entry[cleanKey]) {
+            entry[cleanKey] = val;
+          }
         });
         result.push(entry);
       }
@@ -452,12 +520,12 @@
     function getAvailabilityBadge(avail) {
       const a = (avail || '').toLowerCase();
       if (a.includes('freelance') || a.includes('disponibile')) {
-        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></span>${avail}</span>`;
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></span>${escapeHTML(avail)}</span>`;
       }
       if (a.includes('opportunit') || a.includes('lavoro')) {
-        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-cyan"></span>${avail}</span>`;
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-cyan"></span>${escapeHTML(avail)}</span>`;
       }
-      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-purple-950/80 text-purple-300 border border-purple-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-violet"></span>${avail || 'B2B / Servizi'}</span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-purple-950/80 text-purple-300 border border-purple-500/40"><span class="w-1.5 h-1.5 rounded-full bg-brand-violet"></span>${escapeHTML(avail || 'B2B / Servizi')}</span>`;
     }
 
     // Card Profilo
@@ -472,44 +540,58 @@
       const linkedin = p.linkedin_url || p.linkedin || '';
       const github = p.github_url || p.github || '';
       const website = p.website_url || p.website || p.sito || '';
+      const email = p['e-mail'] || p.email || p['e_mail'] || p.mail || '';
       const avatar = p.avatar_url || 'assets/logo.png';
+
+      // Pulisce la bio normalizzando le interruzioni di riga e rimuovendo eccessi
+      const cleanBio = bio.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 
       const tagsList = tags
         .split(',')
         .map(t => t.trim())
         .filter(t => t.length > 0)
-        .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/80">${t.startsWith('#') ? t : '#' + t}</span>`)
+        .map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/80">${escapeHTML(t.startsWith('#') ? t : '#' + t)}</span>`)
         .join('');
 
-      // Social Links buttons
+      // Social Links & Canali di Contatto
       let socialButtons = '';
       if (linkedin) {
-        socialButtons += `<a href="${linkedin}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-[#0a66c2] hover:bg-slate-700 transition" title="Profilo LinkedIn"><i data-lucide="linkedin" class="w-4 h-4"></i></a>`;
+        socialButtons += `<a href="${escapeHTML(linkedin)}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-[#0a66c2] hover:bg-slate-700 transition" title="Profilo LinkedIn"><i data-lucide="linkedin" class="w-4 h-4"></i></a>`;
       }
       if (github) {
-        socialButtons += `<a href="${github}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Profilo GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>`;
+        socialButtons += `<a href="${escapeHTML(github)}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Profilo GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>`;
       }
       if (website) {
-        socialButtons += `<a href="${website}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-brand-cyan hover:bg-slate-700 transition" title="Sito Web / Portfolio"><i data-lucide="globe" class="w-4 h-4"></i></a>`;
+        socialButtons += `<a href="${escapeHTML(website)}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-brand-cyan hover:bg-slate-700 transition" title="Sito Web / Portfolio"><i data-lucide="globe" class="w-4 h-4"></i></a>`;
+      }
+      if (email) {
+        const cleanEmail = email.trim();
+        if (cleanEmail) {
+          const mailHref = cleanEmail.startsWith('mailto:') ? cleanEmail : `mailto:${cleanEmail}`;
+          socialButtons += `<a href="${escapeHTML(mailHref)}" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-brand-violet hover:bg-slate-700 transition" title="Invia E-mail (${escapeHTML(cleanEmail)})"><i data-lucide="mail" class="w-4 h-4"></i></a>`;
+        }
       }
 
+      // Parole chiave per la ricerca in tempo reale (inclusa e-mail e testo bio)
+      const searchKeywords = `${name} ${role} ${cleanBio} ${location} ${tags} ${email}`.toLowerCase().replace(/[\r\n]+/g, ' ');
+
       return `
-        <div class="profile-card group relative rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 flex flex-col justify-between hover:border-brand-violet/60 hover:shadow-xl hover:shadow-brand-violet/10"
-             data-category="${category}"
-             data-keywords="${(name + ' ' + role + ' ' + bio + ' ' + location + ' ' + tags).toLowerCase()}">
+        <div class="profile-card group relative rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 flex flex-col justify-between hover:border-brand-violet/60 hover:shadow-xl hover:shadow-brand-violet/10 transition-all duration-300"
+             data-category="${escapeHTML(category)}"
+             data-keywords="${escapeHTML(searchKeywords)}">
           <div>
             <div class="flex items-start justify-between gap-3 mb-4">
               <div class="flex items-center gap-3.5">
                 <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner group-hover:border-brand-violet transition">
-                  <img src="${avatar}" alt="${name}" class="w-full h-full object-cover rounded-[10px]" onerror="this.src='assets/logo.png'" />
+                  <img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}" class="w-full h-full object-cover rounded-[10px]" onerror="this.src='assets/logo.png'" />
                 </div>
                 <div>
                   <h2 class="text-base font-bold text-white group-hover:text-brand-violet transition leading-tight">
-                    ${name}
+                    ${escapeHTML(name)}
                   </h2>
-                  <p class="text-xs text-brand-violet font-medium mt-0.5">${role}</p>
+                  <p class="text-xs text-brand-violet font-medium mt-0.5">${escapeHTML(role)}</p>
                   <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                    <i data-lucide="map-pin" class="w-3 h-3 text-slate-500"></i> ${location}
+                    <i data-lucide="map-pin" class="w-3 h-3 text-slate-500"></i> ${escapeHTML(location)}
                   </p>
                 </div>
               </div>
@@ -519,8 +601,8 @@
               ${getAvailabilityBadge(availability)}
             </div>
 
-            <p class="text-xs text-slate-300 leading-relaxed mb-5">
-              ${bio}
+            <p class="text-xs text-slate-300 leading-relaxed mb-5 whitespace-pre-line">
+              ${escapeHTML(cleanBio)}
             </p>
           </div>
 
